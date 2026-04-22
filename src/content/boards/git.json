@@ -1,0 +1,6 @@
+{
+  "name": "Git",
+  "description": "버전 관리와 협업 워크플로",
+  "category": "운영",
+  "order": 30
+}

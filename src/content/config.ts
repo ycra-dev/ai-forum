@@ -29,6 +29,7 @@ const boards = defineCollection({
   schema: z.object({
     name: z.string(),
     description: z.string().optional().default(''),
+    category: z.string(),
     order: z.number().optional().default(100),
   }),
 });

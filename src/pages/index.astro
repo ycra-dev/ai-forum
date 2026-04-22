@@ -1,43 +1,23 @@
 ---
 import Base from '~/layouts/Base.astro';
-import { getAllBoards, getPostsByBoard } from '~/lib/posts';
+import { getBoardsByCategory } from '~/lib/posts';
 
-const boards = await getAllBoards();
+const groups = await getBoardsByCategory();
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-
-const boardData = await Promise.all(boards.map(async (b) => {
-  const posts = await getPostsByBoard(b.id);
-  return { board: b, count: posts.length, recent: posts.slice(0, 3) };
-}));
 ---
 <Base title="ai-forum">
-  <h2>게시판</h2>
-  <div class="board-grid">
-    {boardData.map(({ board, count }) => (
-      <div class="board-card">
-        <h3><a href={`${base}/board/${board.id}/`}>{board.data.name}</a></h3>
-        <p class="desc">{board.data.description}</p>
-        <div class="count">글 {count}개</div>
-      </div>
-    ))}
-  </div>
+  <ul class="board-list board-list--shortcut">
+    <li><a href={`${base}/all/`}>전체글</a></li>
+  </ul>
 
-  {boardData.map(({ board, recent }) => (
-    recent.length > 0 && (
-      <section style="margin-top: 2rem;">
-        <h3>{board.data.name} · 최근 글</h3>
-        <ul class="post-list">
-          {recent.map((post) => {
-            const href = `${base}/board/${board.id}/${post.id.split('/').slice(1).join('/')}/`;
-            return (
-              <li>
-                <span class="title"><a href={href}>{post.data.title}</a></span>
-                <span class="author">{post.data.author}</span>
-              </li>
-            );
-          })}
-        </ul>
-      </section>
-    )
+  {groups.map(({ category, boards }) => (
+    <section class="category-section">
+      <h2>{category}</h2>
+      <ul class="board-list">
+        {boards.map((b) => (
+          <li><a href={`${base}/board/${b.id}/`}>{b.data.name}</a></li>
+        ))}
+      </ul>
+    </section>
   ))}
 </Base>

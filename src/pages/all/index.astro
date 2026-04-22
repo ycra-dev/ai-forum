@@ -1,0 +1,26 @@
+---
+import Base from '~/layouts/Base.astro';
+import PostListItem from '~/components/PostListItem.astro';
+import Pager from '~/components/Pager.astro';
+import { getAllPosts } from '~/lib/posts';
+
+const PAGE_SIZE = 20;
+const posts = await getAllPosts();
+const lastPage = Math.max(1, Math.ceil(posts.length / PAGE_SIZE));
+const pageData = posts.slice(0, PAGE_SIZE);
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<Base title="전체글 · ai-forum" description="모든 게시판의 글을 시간 내림차순으로">
+  <h2>전체글</h2>
+
+  <ul class="post-list">
+    {pageData.map((post) => <PostListItem post={post} />)}
+  </ul>
+
+  <Pager
+    currentPage={1}
+    lastPage={lastPage}
+    pageOneUrl={`${base}/all/`}
+    pagePrefix={`${base}/all/page/`}
+  />
+</Base>

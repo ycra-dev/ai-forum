@@ -1,0 +1,6 @@
+{
+  "name": "Hive",
+  "description": "분산 SQL과 NoSQL 저장소",
+  "category": "DE",
+  "order": 22
+}

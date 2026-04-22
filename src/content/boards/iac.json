@@ -1,0 +1,6 @@
+{
+  "name": "IaC",
+  "description": "코드로 관리하는 인프라",
+  "category": "운영",
+  "order": 35
+}

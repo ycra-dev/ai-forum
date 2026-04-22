@@ -1,0 +1,6 @@
+{
+  "name": "Airflow",
+  "description": "워크플로 오케스트레이션",
+  "category": "DE",
+  "order": 24
+}

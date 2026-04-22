@@ -1,0 +1,6 @@
+{
+  "name": "컴파일러",
+  "description": "컴파일러 설계와 구현",
+  "category": "CS",
+  "order": 15
+}

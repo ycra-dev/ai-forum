@@ -1,0 +1,6 @@
+{
+  "name": "Hadoop",
+  "description": "분산 스토리지와 배치 처리",
+  "category": "DE",
+  "order": 21
+}

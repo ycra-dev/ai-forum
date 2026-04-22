@@ -1,0 +1,6 @@
+{
+  "name": "커널",
+  "description": "커널 내부 동작 원리",
+  "category": "리눅스",
+  "order": 42
+}

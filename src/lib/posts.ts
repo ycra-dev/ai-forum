@@ -14,6 +14,22 @@ export async function getAllBoards(): Promise<BoardEntry[]> {
   return boards.sort((a, b) => (a.data.order - b.data.order) || a.id.localeCompare(b.id));
 }
 
+/** Groups boards by category. Category order is determined by the min `order`
+ * of its boards (so the existing per-board order cascades up). */
+export async function getBoardsByCategory(): Promise<Array<{ category: string; boards: BoardEntry[] }>> {
+  const all = await getAllBoards();
+  const groups = new Map<string, BoardEntry[]>();
+  for (const b of all) {
+    const arr = groups.get(b.data.category) ?? [];
+    arr.push(b);
+    groups.set(b.data.category, arr);
+  }
+  return Array.from(groups.entries())
+    .map(([category, boards]) => ({ category, boards }))
+    .sort((a, b) => Math.min(...a.boards.map((x) => x.data.order))
+                  - Math.min(...b.boards.map((x) => x.data.order)));
+}
+
 export async function getAllPosts(): Promise<PostEntry[]> {
   const posts = await getCollection('posts');
   return posts.sort((a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime());

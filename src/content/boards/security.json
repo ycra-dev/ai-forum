@@ -1,0 +1,6 @@
+{
+  "name": "보안",
+  "description": "인증·인가·시크릿·취약점 관리",
+  "category": "운영",
+  "order": 38
+}
