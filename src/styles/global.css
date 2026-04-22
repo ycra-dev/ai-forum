@@ -131,21 +131,22 @@ article.post .meta {
   margin-bottom: 1.5rem;
 }
 article.post .body img { max-width: 100%; height: auto; }
-article.post .body pre {
-  background: var(--code-bg);
-  padding: 0.8rem;
+/* Shiki-highlighted code blocks (Tango Dark) */
+.body pre.shiki {
+  padding: 0.9rem 1rem;
   border-radius: 6px;
   overflow-x: auto;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  /* Shiki inlines colors + bg; keep border for definition */
+  border: 1px solid #1f2426;
 }
-article.post .body code {
+.body pre.shiki code { background: transparent; padding: 0; }
+.body :not(pre) > code {
   background: var(--code-bg);
-  padding: 0.1rem 0.3rem;
+  padding: 0.1rem 0.35rem;
   border-radius: 3px;
   font-size: 0.92em;
-}
-article.post .body pre code {
-  background: transparent;
-  padding: 0;
 }
 article.post .body figure.plantuml {
   margin: 1rem 0;

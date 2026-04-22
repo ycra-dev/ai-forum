@@ -18,7 +18,7 @@ const { post } = Astro.props;
 const boards = await getAllBoards();
 const boardMeta = boards.find((b) => b.id === splitPostId(post.id).boardSlug)!;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const html = renderMarkdown(post.data.body);
+const html = await renderMarkdown(post.data.body);
 ---
 <Base title={`${post.data.title} · ${boardMeta.data.name}`}>
   <p style="font-size: 0.85rem; color: var(--fg-muted);">

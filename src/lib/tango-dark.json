@@ -1,0 +1,31 @@
+{
+  "name": "tango-dark",
+  "type": "dark",
+  "colors": {
+    "editor.background": "#2e3436",
+    "editor.foreground": "#eeeeec"
+  },
+  "tokenColors": [
+    { "scope": ["comment", "punctuation.definition.comment"], "settings": { "foreground": "#888a85", "fontStyle": "italic" } },
+    { "scope": ["string", "string.quoted", "string.template"], "settings": { "foreground": "#8ae234" } },
+    { "scope": ["constant.character.escape"], "settings": { "foreground": "#e9b96e" } },
+    { "scope": ["constant.numeric", "constant.language", "constant.other"], "settings": { "foreground": "#ad7fa8" } },
+    { "scope": ["keyword", "storage.type", "storage.modifier", "keyword.control"], "settings": { "foreground": "#729fcf" } },
+    { "scope": ["keyword.operator"], "settings": { "foreground": "#eeeeec" } },
+    { "scope": ["entity.name.function", "support.function", "meta.function-call entity.name.function"], "settings": { "foreground": "#fcaf3e" } },
+    { "scope": ["entity.name.type", "entity.name.class", "support.class", "support.type"], "settings": { "foreground": "#fce94f" } },
+    { "scope": ["variable", "variable.other", "variable.parameter"], "settings": { "foreground": "#eeeeec" } },
+    { "scope": ["variable.language"], "settings": { "foreground": "#ad7fa8", "fontStyle": "italic" } },
+    { "scope": ["entity.name.tag"], "settings": { "foreground": "#729fcf" } },
+    { "scope": ["entity.other.attribute-name"], "settings": { "foreground": "#fce94f" } },
+    { "scope": ["invalid", "invalid.illegal"], "settings": { "foreground": "#ef2929" } },
+    { "scope": ["markup.heading"], "settings": { "foreground": "#fcaf3e", "fontStyle": "bold" } },
+    { "scope": ["markup.bold"], "settings": { "fontStyle": "bold" } },
+    { "scope": ["markup.italic"], "settings": { "fontStyle": "italic" } },
+    { "scope": ["markup.inline.raw", "markup.raw.block"], "settings": { "foreground": "#e9b96e" } },
+    { "scope": ["markup.list"], "settings": { "foreground": "#eeeeec" } },
+    { "scope": ["markup.quote"], "settings": { "foreground": "#888a85", "fontStyle": "italic" } },
+    { "scope": ["meta.link", "markup.underline.link"], "settings": { "foreground": "#729fcf" } },
+    { "scope": ["punctuation"], "settings": { "foreground": "#d3d7cf" } }
+  ]
+}
