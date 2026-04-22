@@ -1,0 +1,36 @@
+---
+import { renderMarkdown } from '~/lib/markdown';
+import { formatDate } from '~/lib/posts';
+
+interface Reply {
+  author: string;
+  createdAt: Date;
+  body: string;
+}
+interface Comment extends Reply {
+  replies?: Reply[];
+}
+interface Props { comments: Comment[] }
+const { comments } = Astro.props;
+const total = comments.reduce((acc, c) => acc + 1 + (c.replies?.length ?? 0), 0);
+---
+<section class="comments-section">
+  <h2>댓글 {total}</h2>
+  {comments.length === 0 ? <p style="color: var(--fg-muted)">아직 댓글이 없습니다.</p> : null}
+  {comments.map((c) => (
+    <div class="comment">
+      <div class="meta"><strong>{c.author}</strong> · {formatDate(c.createdAt)}</div>
+      <div class="body" set:html={renderMarkdown(c.body)} />
+      {(c.replies && c.replies.length > 0) && (
+        <div class="replies">
+          {c.replies.map((r) => (
+            <div class="reply">
+              <div class="meta"><strong>{r.author}</strong> · {formatDate(r.createdAt)}</div>
+              <div class="body" set:html={renderMarkdown(r.body)} />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  ))}
+</section>

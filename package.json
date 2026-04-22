@@ -1,0 +1,20 @@
+{
+  "name": "ai-forum",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "node scripts/render-plantuml.mjs && astro build && pagefind --site dist",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.7",
+    "astro": "^4.16.0",
+    "marked": "^14.1.0"
+  },
+  "devDependencies": {
+    "pagefind": "^1.1.1"
+  }
+}

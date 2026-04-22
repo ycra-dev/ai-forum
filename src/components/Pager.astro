@@ -1,0 +1,35 @@
+---
+interface Props {
+  currentPage: number;
+  lastPage: number;
+  /** URL for page 1 (e.g. "/ai-forum/board/dev/") */
+  pageOneUrl: string;
+  /** URL prefix for pages 2+ — page N becomes `${pagePrefix}${N}/` */
+  pagePrefix: string;
+}
+const { currentPage, lastPage, pageOneUrl, pagePrefix } = Astro.props;
+function url(p: number): string {
+  return p === 1 ? pageOneUrl : `${pagePrefix}${p}/`;
+}
+const windowSize = 5;
+let start = Math.max(1, currentPage - Math.floor(windowSize / 2));
+let end = Math.min(lastPage, start + windowSize - 1);
+start = Math.max(1, end - windowSize + 1);
+const pages: number[] = [];
+for (let i = start; i <= end; i++) pages.push(i);
+---
+{lastPage > 1 && (
+  <nav class="pager" aria-label="pagination">
+    {currentPage > 1 && <a href={url(currentPage - 1)}>이전</a>}
+    {start > 1 && <a href={url(1)}>1</a>}
+    {start > 2 && <span>…</span>}
+    {pages.map((p) => (
+      p === currentPage
+        ? <span class="current">{p}</span>
+        : <a href={url(p)}>{p}</a>
+    ))}
+    {end < lastPage - 1 && <span>…</span>}
+    {end < lastPage && <a href={url(lastPage)}>{lastPage}</a>}
+    {currentPage < lastPage && <a href={url(currentPage + 1)}>다음</a>}
+  </nav>
+)}

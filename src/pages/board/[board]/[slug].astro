@@ -1,0 +1,41 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '~/layouts/Base.astro';
+import Comments from '~/components/Comments.astro';
+import { getAllBoards, getAllPosts, formatDate, splitPostId, type PostEntry } from '~/lib/posts';
+import { renderMarkdown } from '~/lib/markdown';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const posts = await getAllPosts();
+  return posts.map((post) => {
+    const { boardSlug, postSlug } = splitPostId(post.id);
+    return { params: { board: boardSlug, slug: postSlug }, props: { post } };
+  });
+};
+
+interface Props { post: PostEntry }
+const { post } = Astro.props;
+const boards = await getAllBoards();
+const boardMeta = boards.find((b) => b.id === splitPostId(post.id).boardSlug)!;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const html = renderMarkdown(post.data.body);
+---
+<Base title={`${post.data.title} · ${boardMeta.data.name}`}>
+  <p style="font-size: 0.85rem; color: var(--fg-muted);">
+    <a href={`${base}/`}>홈</a> › <a href={`${base}/board/${boardMeta.id}/`}>{boardMeta.data.name}</a>
+  </p>
+  <article
+    class="post"
+    data-pagefind-body
+    data-pagefind-filter={`board:${boardMeta.id}`}
+    data-pagefind-meta={`author:${post.data.author}, board:${boardMeta.data.name}`}
+    data-pagefind-sort={`date:${post.data.createdAt.toISOString()}`}
+  >
+    <h1 data-pagefind-meta="title">{post.data.title}</h1>
+    <div class="meta">
+      <strong>{post.data.author}</strong> · {formatDate(post.data.createdAt)}
+    </div>
+    <div class="body" set:html={html} />
+  </article>
+  <Comments comments={post.data.comments ?? []} />
+</Base>

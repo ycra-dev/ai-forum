@@ -1,0 +1,51 @@
+---
+import Base from '~/layouts/Base.astro';
+import { getAllBoards } from '~/lib/posts';
+const boards = await getAllBoards();
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+<Base title="검색 · ai-forum">
+  <h2>검색</h2>
+  <p style="color: var(--fg-muted)">전체 게시판에서 시간 내림차순으로 검색합니다.</p>
+
+  <div style="margin-bottom: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+    <label style="font-size: 0.9rem;">
+      게시판 필터:
+      <select id="board-filter" style="padding: 0.3rem; border-radius: 4px;">
+        <option value="">전체</option>
+        {boards.map((b) => <option value={b.id}>{b.data.name}</option>)}
+      </select>
+    </label>
+  </div>
+
+  <div id="search"></div>
+
+  <link rel="stylesheet" href={`${base}/pagefind/pagefind-ui.css`} />
+  <script src={`${base}/pagefind/pagefind-ui.js`} is:inline></script>
+  <script is:inline define:vars={{ base }}>
+    window.addEventListener('DOMContentLoaded', () => {
+      const ui = new PagefindUI({
+        element: '#search',
+        showImages: false,
+        resetStyles: false,
+        showSubResults: true,
+        sort: { date: 'desc' },
+        translations: {
+          placeholder: '검색어를 입력하세요',
+          clear_search: '지우기',
+          load_more: '더 보기',
+          search_label: '검색',
+          filters_label: '필터',
+          zero_results: '결과가 없습니다',
+          many_results: '[COUNT]개 결과 "[SEARCH_TERM]"',
+          one_result: '1개 결과 "[SEARCH_TERM]"',
+          searching: '"[SEARCH_TERM]" 검색 중…',
+        },
+      });
+      document.getElementById('board-filter')?.addEventListener('change', (e) => {
+        const v = e.target.value;
+        ui.triggerFilters(v ? { board: v } : {});
+      });
+    });
+  </script>
+</Base>
