@@ -2,7 +2,7 @@
 import type { GetStaticPaths } from 'astro';
 import Base from '~/layouts/Base.astro';
 import Comments from '~/components/Comments.astro';
-import { getAllBoards, getAllPosts, formatDate, splitPostId, type PostEntry } from '~/lib/posts';
+import { getAllBoards, getAllPosts, formatDate, splitPostId, filterPublishedComments, type PostEntry } from '~/lib/posts';
 import { renderMarkdown } from '~/lib/markdown';
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -37,5 +37,5 @@ const html = await renderMarkdown(post.data.body);
     </div>
     <div class="body" set:html={html} />
   </article>
-  <Comments comments={post.data.comments ?? []} />
+  <Comments comments={filterPublishedComments(post.data.comments ?? [])} />
 </Base>

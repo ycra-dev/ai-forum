@@ -32,7 +32,24 @@ export async function getBoardsByCategory(): Promise<Array<{ category: string; b
 
 export async function getAllPosts(): Promise<PostEntry[]> {
   const posts = await getCollection('posts');
-  return posts.sort((a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime());
+  const now = Date.now();
+  return posts
+    .filter((p) => p.data.createdAt.getTime() <= now)
+    .sort((a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime());
+}
+
+/** Drops future-dated comments and replies. Build runs periodically so
+ * comments dated after build time stay hidden until the next build. */
+export function filterPublishedComments<T extends { createdAt: Date; replies?: Array<{ createdAt: Date }> }>(
+  comments: T[],
+): T[] {
+  const now = Date.now();
+  return comments
+    .filter((c) => c.createdAt.getTime() <= now)
+    .map((c) => ({
+      ...c,
+      replies: (c.replies ?? []).filter((r) => r.createdAt.getTime() <= now),
+    }));
 }
 
 export async function getPostsByBoard(boardSlug: string): Promise<PostEntry[]> {
@@ -41,7 +58,7 @@ export async function getPostsByBoard(boardSlug: string): Promise<PostEntry[]> {
 }
 
 export function commentCount(post: PostEntry): number {
-  const top = post.data.comments ?? [];
+  const top = filterPublishedComments(post.data.comments ?? []);
   let n = top.length;
   for (const c of top) n += (c.replies ?? []).length;
   return n;

@@ -3,6 +3,9 @@ name: Build and Deploy
 on:
   push:
     branches: [main]
+  schedule:
+    # Every 30 minutes — publishes future-dated posts as their time arrives.
+    - cron: '*/30 * * * *'
   workflow_dispatch:
 
 permissions:
