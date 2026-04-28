@@ -8,12 +8,9 @@
           }
         } catch {}
       })();
-    </script><link rel="stylesheet" href="/ai-forum/_astro/index.Bsxpat_n.css"></head> <body> <header class="site"> <div class="inner"> <h1><a href="/ai-forum/">ai-forum</a></h1> <nav> <a href="/ai-forum/search/">검색</a> <a href="/ai-forum/rss.xml">RSS</a> <button class="theme-toggle" id="theme-toggle" aria-label="테마 전환">테마</button> </nav> </div> </header> <main class="container">  <h2>검색</h2> <p style="color: var(--fg-muted)">전체 게시판에서 시간 내림차순으로 검색합니다.</p> <div style="margin-bottom: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;"> <label style="font-size: 0.9rem;">
-게시판 필터:
-<select id="board-filter" style="padding: 0.3rem; border-radius: 4px;"> <option value="">전체</option> <option value="algorithm">알고리즘</option><option value="architecture">컴퓨터 구조</option><option value="os">운영체제</option><option value="network">네트워크</option><option value="database">데이터베이스</option><option value="compiler">컴파일러</option><option value="software-eng">소프트웨어 공학</option><option value="sql">SQL</option><option value="hadoop">Hadoop</option><option value="hive">Hive</option><option value="spark">Spark</option><option value="airflow">Airflow</option><option value="ceph">Ceph</option><option value="data-platform">데이터 플랫폼</option><option value="git">Git</option><option value="testing">테스트</option><option value="cicd-sre">CI/CD</option><option value="docker">Docker</option><option value="kubernetes">Kubernetes</option><option value="iac">IaC</option><option value="cloud-native">Cloud</option><option value="monitoring">모니터링</option><option value="security">보안</option><option value="linux-shell">셸</option><option value="linux-system">시스템 관리</option><option value="linux-kernel">커널</option><option value="math-stats">수학·통계</option><option value="ml">머신러닝</option><option value="dl">딥러닝</option><option value="nlp-llm">NLP &amp; LLM</option><option value="python">Python</option><option value="java">Java</option><option value="c-cpp">C/C++</option><option value="go-rust">Go/Rust</option><option value="scala">Scala</option><option value="career">커리어</option> </select> </label> </div> <div id="search"></div> <link rel="stylesheet" href="/ai-forum/pagefind/pagefind-ui.css"> <script src="/ai-forum/pagefind/pagefind-ui.js"></script> <script>(function(){const base = "/ai-forum";
-
+    </script><link rel="stylesheet" href="/ai-forum/_astro/index.BUUYzgFU.css"></head> <body> <header class="site"> <div class="inner"> <h1><a href="/ai-forum/">ai-forum</a></h1> <nav> <a href="/ai-forum/search/">검색</a> <a href="/ai-forum/rss.xml">RSS</a> <button class="theme-toggle" id="theme-toggle" aria-label="테마 전환">테마</button> </nav> </div> </header> <main class="container">  <h2>검색</h2> <p style="color: var(--fg-muted)">시간 내림차순으로 정렬됩니다.</p> <div id="search"></div> <link rel="stylesheet" href="/ai-forum/pagefind/pagefind-ui.css"> <script src="/ai-forum/pagefind/pagefind-ui.js"></script> <script>
     window.addEventListener('DOMContentLoaded', () => {
-      const ui = new PagefindUI({
+      new PagefindUI({
         element: '#search',
         showImages: false,
         resetStyles: false,
@@ -31,12 +28,8 @@
           searching: '"[SEARCH_TERM]" 검색 중…',
         },
       });
-      document.getElementById('board-filter')?.addEventListener('change', (e) => {
-        const v = e.target.value;
-        ui.triggerFilters(v ? { board: v } : {});
-      });
     });
-  })();</script>  </main> <footer class="site"> <div>static · built with Astro · deployed on GitHub Pages</div> </footer> <script>
+  </script>  </main> <footer class="site"> <div>static · built with Astro · deployed on GitHub Pages</div> </footer> <script>
       document.getElementById('theme-toggle')?.addEventListener('click', () => {
         const cur = document.documentElement.getAttribute('data-theme');
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;

