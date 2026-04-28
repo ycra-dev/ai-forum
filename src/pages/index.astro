@@ -1,23 +1,219 @@
 ---
 import Base from '~/layouts/Base.astro';
-import { getBoardsByCategory } from '~/lib/posts';
+import { getTopicCounts, getAllPosts } from '~/lib/posts';
 
-const groups = await getBoardsByCategory();
+const topics = await getTopicCounts();
+const totalCount = (await getAllPosts()).length;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+// Built-once version string — busts the posts-index.json cache on each deploy
+// while letting the browser cache between visits within the same build.
+const buildId = String(Date.now());
+const TOP_N = 8;
+const top = topics.slice(0, TOP_N);
+const rest = topics.slice(TOP_N);
 ---
 <Base title="ai-forum">
-  <ul class="board-list board-list--shortcut">
-    <li><a href={`${base}/all/`}>전체글</a></li>
-  </ul>
+  {topics.length > 0 && (
+    <div class="topic-chips">
+      <a href={`${base}/`} class="chip chip--all" data-topic="">전체 <span class="chip-count">{totalCount}</span></a>
+      {top.map(({ topic, count }) => (
+        <a href={`${base}/?topic=${encodeURIComponent(topic)}`} class="chip" data-topic={topic}>
+          {topic} <span class="chip-count">{count}</span>
+        </a>
+      ))}
+      {rest.length > 0 && (
+        <button type="button" class="chip chip--more" id="topic-more">+{rest.length}개</button>
+      )}
+      {rest.map(({ topic, count }) => (
+        <a href={`${base}/?topic=${encodeURIComponent(topic)}`} class="chip chip--hidden" data-topic={topic}>
+          {topic} <span class="chip-count">{count}</span>
+        </a>
+      ))}
+    </div>
+  )}
 
-  {groups.map(({ category, boards }) => (
-    <section class="category-section">
-      <h2>{category}</h2>
-      <ul class="board-list">
-        {boards.map((b) => (
-          <li><a href={`${base}/board/${b.id}/`}>{b.data.name}</a></li>
-        ))}
-      </ul>
-    </section>
-  ))}
+  <div class="feed" id="feed"></div>
+  <div id="load-status" class="load-status" aria-live="polite"></div>
+  <div id="sentinel" style="height: 1px;"></div>
+
+  <script is:inline define:vars={{ base, buildId }}>
+    (function () {
+      const PAGE_SIZE = 10;
+      const COLLAPSE_PX = 360;     // body가 이 높이를 넘으면 "더보기" 표시
+      const feed = document.getElementById('feed');
+      const status = document.getElementById('load-status');
+      const sentinel = document.getElementById('sentinel');
+      const moreBtn = document.getElementById('topic-more');
+
+      const params = new URLSearchParams(location.search);
+      const active = params.get('topic') || '';
+      document.querySelectorAll('.chip').forEach((c) => {
+        if ((c.dataset.topic || '') === active) c.classList.add('chip--active');
+      });
+      if (moreBtn) {
+        moreBtn.addEventListener('click', () => {
+          document.querySelectorAll('.chip--hidden').forEach((c) => c.classList.remove('chip--hidden'));
+          moreBtn.remove();
+        });
+      }
+
+      function fmtDate(iso) {
+        const d = new Date(iso);
+        const p = (n) => String(n).padStart(2, '0');
+        return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate())
+             + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+      }
+      function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+      }
+
+      function relativeTime(iso) {
+        const t = new Date(iso).getTime();
+        const diff = Date.now() - t;
+        const sec = Math.round(diff / 1000);
+        if (sec < 60) return '방금';
+        const min = Math.round(sec / 60);
+        if (min < 60) return min + '분';
+        const hr = Math.round(min / 60);
+        if (hr < 24) return hr + '시간';
+        const day = Math.round(hr / 24);
+        if (day < 7) return day + '일';
+        const d = new Date(iso);
+        const p = (n) => String(n).padStart(2, '0');
+        const sameYear = d.getFullYear() === new Date().getFullYear();
+        return sameYear
+          ? p(d.getMonth() + 1) + '월 ' + d.getDate() + '일'
+          : d.getFullYear() + '. ' + p(d.getMonth() + 1) + '. ' + p(d.getDate());
+      }
+
+      function renderCard(p) {
+        const href = base + '/post/' + encodeURIComponent(p.slug) + '/';
+        const fullDate = fmtDate(p.createdAt);
+        const rel = relativeTime(p.createdAt);
+        const topics = (p.topics || []).map((t) =>
+          '<a class="topic-badge topic-badge--link" href="' + base + '/?topic=' + encodeURIComponent(t) + '">#' + escapeHtml(t) + '</a>'
+        ).join(' ');
+        return '<article class="feed-card" data-slug="' + escapeHtml(p.slug) + '">'
+          + '<div class="feed-card__byline">'
+          +   '<strong>' + escapeHtml(p.author) + '</strong>'
+          +   '<span class="dot">·</span>'
+          +   '<time datetime="' + p.createdAt + '" title="' + fullDate + '">' + rel + '</time>'
+          + '</div>'
+          + '<h2 class="feed-card__title"><a href="' + href + '">' + escapeHtml(p.title) + '</a></h2>'
+          + '<div class="feed-card__body-wrap">'
+          +   '<div class="feed-card__body body">' + p.bodyHtml + '</div>'
+          + '</div>'
+          + '<div class="feed-card__expand">'
+          +   '<button type="button" class="expand-btn" data-action="expand">더보기</button>'
+          +   '<a class="open-link" href="' + href + '">상세 보기 →</a>'
+          + '</div>'
+          + '<div class="feed-card__footer">'
+          +   (topics ? '<div class="feed-card__topics">' + topics + '</div>' : '<span></span>')
+          +   '<div class="feed-card__stats">'
+          +     '<a class="stat" href="' + href + '#comments" title="댓글">💬 ' + (p.comments || 0) + '</a>'
+          +   '</div>'
+          + '</div>'
+          + '</article>';
+      }
+
+      // After insertion, decide which cards need the truncate state
+      function applyCollapse(cards) {
+        for (const card of cards) {
+          const wrap = card.querySelector('.feed-card__body-wrap');
+          const expand = card.querySelector('.feed-card__expand');
+          if (!wrap || !expand) continue;
+          const h = wrap.scrollHeight;
+          if (h > COLLAPSE_PX) {
+            wrap.classList.add('is-collapsed');
+            expand.classList.add('is-needed');
+          }
+        }
+      }
+
+      feed.addEventListener('click', (e) => {
+        const btn = e.target.closest('button[data-action]');
+        if (!btn) return;
+        const card = btn.closest('.feed-card');
+        if (!card) return;
+        const wrap = card.querySelector('.feed-card__body-wrap');
+        const action = btn.dataset.action;
+        if (action === 'expand') {
+          wrap.classList.remove('is-collapsed');
+          btn.dataset.action = 'collapse';
+          btn.textContent = '접기';
+        } else {
+          wrap.classList.add('is-collapsed');
+          btn.dataset.action = 'expand';
+          btn.textContent = '더보기';
+          card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      });
+
+      let allPosts = [];
+      let filtered = [];
+      let cursor = 0;
+      let loading = false;
+      let exhausted = false;
+
+      async function load() {
+        status.textContent = '불러오는 중…';
+        try {
+          // Cache-bust per build (buildId set at build time) so stale
+          // post-index never lingers, but the browser can still cache between
+          // visits within the same build.
+          const res = await fetch(base + '/posts-index.json?v=' + buildId);
+          const json = await res.json();
+          allPosts = json.posts || [];
+        } catch (e) {
+          status.textContent = '글 목록을 불러오지 못했습니다.';
+          return;
+        }
+        filtered = active
+          ? allPosts.filter((p) => (p.topics || []).includes(active))
+          : allPosts;
+        if (filtered.length === 0) {
+          status.textContent = active ? '"' + active + '" 토픽 글이 없습니다.' : '아직 글이 없습니다.';
+          exhausted = true;
+          return;
+        }
+        status.textContent = '';
+        appendChunk();
+        observe();
+      }
+
+      function appendChunk() {
+        if (loading || exhausted) return;
+        loading = true;
+        const next = filtered.slice(cursor, cursor + PAGE_SIZE);
+        cursor += next.length;
+        const before = feed.children.length;
+        feed.insertAdjacentHTML('beforeend', next.map(renderCard).join(''));
+        const newCards = Array.from(feed.children).slice(before);
+        applyCollapse(newCards);
+        if (cursor >= filtered.length) {
+          exhausted = true;
+          status.textContent = '— 끝 —';
+        }
+        loading = false;
+      }
+
+      function observe() {
+        if (!('IntersectionObserver' in window)) {
+          while (!exhausted) appendChunk();
+          return;
+        }
+        const io = new IntersectionObserver((entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              appendChunk();
+              if (exhausted) io.disconnect();
+            }
+          }
+        }, { rootMargin: '500px 0px' });
+        io.observe(sentinel);
+      }
+
+      load();
+    })();
+  </script>
 </Base>

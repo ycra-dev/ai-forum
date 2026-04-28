@@ -1,16 +1,21 @@
 ---
 import type { PostEntry } from '~/lib/posts';
-import { commentCount, formatDate, splitPostId } from '~/lib/posts';
+import { commentCount, formatDate } from '~/lib/posts';
 
 interface Props { post: PostEntry }
 const { post } = Astro.props;
-const { boardSlug, postSlug } = splitPostId(post.id);
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const href = `${base}/board/${boardSlug}/${postSlug}/`;
+const href = `${base}/post/${post.id}/`;
 const n = commentCount(post);
+const topics = post.data.topics ?? [];
 ---
-<li>
+<li data-topics={topics.join(',')}>
   <span class="title"><a href={href}>{post.data.title}</a></span>
+  {topics.length > 0 && (
+    <span class="post-topics">
+      {topics.map((t) => <span class="topic-badge">{t}</span>)}
+    </span>
+  )}
   <span class="comments">{n > 0 ? `💬 ${n}` : ''}</span>
   <span class="author">{post.data.author}</span>
   <span class="date">{formatDate(post.data.createdAt)}</span>

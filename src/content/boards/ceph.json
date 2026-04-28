@@ -1,6 +1,0 @@
-{
-  "name": "Ceph",
-  "description": "분산 오브젝트·블록 스토리지",
-  "category": "DE",
-  "order": 25
-}

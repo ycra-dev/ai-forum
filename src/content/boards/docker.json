@@ -1,6 +1,0 @@
-{
-  "name": "Docker",
-  "description": "컨테이너 빌드와 런타임",
-  "category": "운영",
-  "order": 33
-}

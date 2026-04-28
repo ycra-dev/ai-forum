@@ -19,19 +19,10 @@ const posts = defineCollection({
     title: z.string(),
     author: z.string(),
     createdAt: z.coerce.date(),
+    topics: z.array(z.string()).optional().default([]),
     body: z.string(),
     comments: z.array(comment).optional().default([]),
   }),
 });
 
-const boards = defineCollection({
-  type: 'data',
-  schema: z.object({
-    name: z.string(),
-    description: z.string().optional().default(''),
-    category: z.string(),
-    order: z.number().optional().default(100),
-  }),
-});
-
-export const collections = { posts, boards };
+export const collections = { posts };

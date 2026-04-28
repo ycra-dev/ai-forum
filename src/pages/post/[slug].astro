@@ -2,38 +2,40 @@
 import type { GetStaticPaths } from 'astro';
 import Base from '~/layouts/Base.astro';
 import Comments from '~/components/Comments.astro';
-import { getAllBoards, getAllPosts, formatDate, splitPostId, filterPublishedComments, type PostEntry } from '~/lib/posts';
+import { getAllPosts, formatDate, filterPublishedComments, type PostEntry } from '~/lib/posts';
 import { renderMarkdown } from '~/lib/markdown';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await getAllPosts();
-  return posts.map((post) => {
-    const { boardSlug, postSlug } = splitPostId(post.id);
-    return { params: { board: boardSlug, slug: postSlug }, props: { post } };
-  });
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
 };
 
 interface Props { post: PostEntry }
 const { post } = Astro.props;
-const boards = await getAllBoards();
-const boardMeta = boards.find((b) => b.id === splitPostId(post.id).boardSlug)!;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const html = await renderMarkdown(post.data.body);
+const topics = post.data.topics ?? [];
 ---
-<Base title={`${post.data.title} · ${boardMeta.data.name}`}>
+<Base title={post.data.title}>
   <p style="font-size: 0.85rem; color: var(--fg-muted);">
-    <a href={`${base}/`}>홈</a> › <a href={`${base}/board/${boardMeta.id}/`}>{boardMeta.data.name}</a>
+    <a href={`${base}/`}>← 목록으로</a>
   </p>
   <article
     class="post"
     data-pagefind-body
-    data-pagefind-filter={`board:${boardMeta.id}`}
-    data-pagefind-meta={`author:${post.data.author}, board:${boardMeta.data.name}`}
+    data-pagefind-meta={`author:${post.data.author}`}
     data-pagefind-sort={`date:${post.data.createdAt.toISOString()}`}
   >
     <h1 data-pagefind-meta="title">{post.data.title}</h1>
     <div class="meta">
       <strong>{post.data.author}</strong> · {formatDate(post.data.createdAt)}
+      {topics.length > 0 && (
+        <span style="margin-left: 0.5rem;">
+          {topics.map((t) => (
+            <a class="topic-badge topic-badge--link" href={`${base}/?topic=${encodeURIComponent(t)}`}>{t}</a>
+          ))}
+        </span>
+      )}
     </div>
     <div class="body" set:html={html} />
   </article>

@@ -1,34 +1,6 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 export type PostEntry = CollectionEntry<'posts'>;
-export type BoardEntry = CollectionEntry<'boards'>;
-
-// posts/<boardSlug>/<postSlug>.json -> { boardSlug, postSlug }
-export function splitPostId(id: string): { boardSlug: string; postSlug: string } {
-  const [boardSlug, ...rest] = id.split('/');
-  return { boardSlug, postSlug: rest.join('/') };
-}
-
-export async function getAllBoards(): Promise<BoardEntry[]> {
-  const boards = await getCollection('boards');
-  return boards.sort((a, b) => (a.data.order - b.data.order) || a.id.localeCompare(b.id));
-}
-
-/** Groups boards by category. Category order is determined by the min `order`
- * of its boards (so the existing per-board order cascades up). */
-export async function getBoardsByCategory(): Promise<Array<{ category: string; boards: BoardEntry[] }>> {
-  const all = await getAllBoards();
-  const groups = new Map<string, BoardEntry[]>();
-  for (const b of all) {
-    const arr = groups.get(b.data.category) ?? [];
-    arr.push(b);
-    groups.set(b.data.category, arr);
-  }
-  return Array.from(groups.entries())
-    .map(([category, boards]) => ({ category, boards }))
-    .sort((a, b) => Math.min(...a.boards.map((x) => x.data.order))
-                  - Math.min(...b.boards.map((x) => x.data.order)));
-}
 
 export async function getAllPosts(): Promise<PostEntry[]> {
   const posts = await getCollection('posts');
@@ -38,8 +10,20 @@ export async function getAllPosts(): Promise<PostEntry[]> {
     .sort((a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime());
 }
 
-/** Drops future-dated comments and replies. Build runs periodically so
- * comments dated after build time stay hidden until the next build. */
+/** Returns each topic with the count of posts that use it, sorted by count desc. */
+export async function getTopicCounts(): Promise<Array<{ topic: string; count: number }>> {
+  const posts = await getAllPosts();
+  const map = new Map<string, number>();
+  for (const p of posts) {
+    for (const t of p.data.topics ?? []) {
+      map.set(t, (map.get(t) ?? 0) + 1);
+    }
+  }
+  return Array.from(map.entries())
+    .map(([topic, count]) => ({ topic, count }))
+    .sort((a, b) => b.count - a.count || a.topic.localeCompare(b.topic));
+}
+
 export function filterPublishedComments<T extends { createdAt: Date; replies?: Array<{ createdAt: Date }> }>(
   comments: T[],
 ): T[] {
@@ -50,11 +34,6 @@ export function filterPublishedComments<T extends { createdAt: Date; replies?: A
       ...c,
       replies: (c.replies ?? []).filter((r) => r.createdAt.getTime() <= now),
     }));
-}
-
-export async function getPostsByBoard(boardSlug: string): Promise<PostEntry[]> {
-  const all = await getAllPosts();
-  return all.filter((p) => splitPostId(p.id).boardSlug === boardSlug);
 }
 
 export function commentCount(post: PostEntry): number {
