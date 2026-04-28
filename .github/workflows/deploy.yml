@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
   schedule:
-    # Every 30 minutes — publishes future-dated posts as their time arrives.
+    # Every 30 minutes — rebuild reshuffles the feed (posts-index.json).
     - cron: '*/30 * * * *'
   workflow_dispatch:
 

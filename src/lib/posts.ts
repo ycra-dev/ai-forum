@@ -4,10 +4,7 @@ export type PostEntry = CollectionEntry<'posts'>;
 
 export async function getAllPosts(): Promise<PostEntry[]> {
   const posts = await getCollection('posts');
-  const now = Date.now();
-  return posts
-    .filter((p) => p.data.createdAt.getTime() <= now)
-    .sort((a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime());
+  return posts.sort((a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime());
 }
 
 /** Returns each topic with the count of posts that use it, sorted by count desc. */
@@ -24,20 +21,13 @@ export async function getTopicCounts(): Promise<Array<{ topic: string; count: nu
     .sort((a, b) => b.count - a.count || a.topic.localeCompare(b.topic));
 }
 
-export function filterPublishedComments<T extends { createdAt: Date; replies?: Array<{ createdAt: Date }> }>(
-  comments: T[],
-): T[] {
-  const now = Date.now();
-  return comments
-    .filter((c) => c.createdAt.getTime() <= now)
-    .map((c) => ({
-      ...c,
-      replies: (c.replies ?? []).filter((r) => r.createdAt.getTime() <= now),
-    }));
+/** Pass-through. Kept so call sites don't churn if we reintroduce filtering. */
+export function filterPublishedComments<T>(comments: T[]): T[] {
+  return comments;
 }
 
 export function commentCount(post: PostEntry): number {
-  const top = filterPublishedComments(post.data.comments ?? []);
+  const top = post.data.comments ?? [];
   let n = top.length;
   for (const c of top) n += (c.replies ?? []).length;
   return n;

